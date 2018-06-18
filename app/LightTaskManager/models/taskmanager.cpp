@@ -135,6 +135,12 @@ void TaskManager::editTask(QString index, QString task)
     m_todolistAdapter->editTask(index.toUInt(), task);
 }
 
+void TaskManager::archiveByStatus(QString status)
+{
+    emit statusMessage("archive_by_status" + status);
+    m_todolistAdapter->archiveByStatus(status);
+}
+
 void TaskManager::openTerminal(QString path)
 {
     qDebug() << "open terminal";

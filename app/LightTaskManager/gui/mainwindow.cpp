@@ -44,6 +44,7 @@ void MainWindow::setupWidgets()
     ui->addUserToolButton->setEnabled(false);
     ui->removeTagToolButton->setEnabled(false);
     ui->removeUserToolButton->setEnabled(false);
+    ui->archiveByStatusPushButton->setEnabled(false);
 
     updateTaskLists();
 }
@@ -257,6 +258,7 @@ void MainWindow::enableTasksActions()
     ui->actionAddTask->setEnabled(true);
     ui->actionDeleteTask->setEnabled(true);
     ui->acceptFiltersPushButton->setEnabled(true);
+    ui->archiveByStatusPushButton->setEnabled(true);
 }
 
 void MainWindow::showStatusMessage(QString message)
@@ -398,5 +400,15 @@ void MainWindow::on_commandLineLineEdit_returnPressed()
     {
         ui->commandLineLineEdit->clear();
         m_taskManager->runCommand(text);
+    }
+}
+
+void MainWindow::on_archiveByStatusPushButton_clicked()
+{
+    QString status = ui->archiveByStatusLineEdit->text();
+    if(status.length() > 0)
+    {
+        ui->archiveByStatusLineEdit->clear();
+        m_taskManager->archiveByStatus(status);
     }
 }

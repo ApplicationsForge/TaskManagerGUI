@@ -70,6 +70,8 @@ private slots:
 
     void on_commandLineLineEdit_returnPressed();
 
+    void on_archiveByStatusPushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QScopedPointer<TaskManager> m_taskManager;
