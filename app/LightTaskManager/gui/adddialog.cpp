@@ -9,6 +9,10 @@ AddDialog::AddDialog(TaskManager &taskManager, QWidget *parent) :
 {
     ui->setupUi(this);
     setup();
+
+    //QDate date = ui->calendarWidget->selectedDate();
+    //date.setDate(2018, 06, 15);
+    //ui->calendarWidget->setSelectedDate(date);
 }
 
 AddDialog::~AddDialog()
