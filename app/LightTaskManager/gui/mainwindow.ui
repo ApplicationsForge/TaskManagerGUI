@@ -248,6 +248,7 @@
     <addaction name="actionAddTask"/>
     <addaction name="actionDeleteTask"/>
     <addaction name="actionArchive_Task_By_Status"/>
+    <addaction name="actionShow_Task"/>
    </widget>
    <widget class="QMenu" name="menuEnvironment">
     <property name="title">
@@ -525,6 +526,11 @@
   <action name="actionArchive_Task_By_Status">
    <property name="text">
     <string>Archive Task By Status</string>
+   </property>
+  </action>
+  <action name="actionShow_Task">
+   <property name="text">
+    <string>Show Task</string>
    </property>
   </action>
  </widget>

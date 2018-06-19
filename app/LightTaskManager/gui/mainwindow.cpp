@@ -32,6 +32,7 @@ void MainWindow::setupWidgets()
     toolbar->addAction(ui->actionDeleteTask);
     toolbar->addAction(ui->actionSettings);
     //toolbar->addAction(ui->actionArchive_Task_By_Status);
+    //toolbar->addAction(ui->actionShow_Task);
 
     ui->statusBar->setStyleSheet("background-color:#333; color: #55bb55");
     ui->statusBar->showMessage("Ready");
@@ -46,6 +47,7 @@ void MainWindow::setupWidgets()
     ui->removeTagToolButton->setEnabled(false);
     ui->removeUserToolButton->setEnabled(false);
     ui->actionArchive_Task_By_Status->setEnabled(false);
+    ui->actionShow_Task->setEnabled(false);
 
     updateTaskLists();
 }
@@ -268,6 +270,7 @@ void MainWindow::enableTasksActions()
     ui->actionDeleteTask->setEnabled(true);
     ui->acceptFiltersPushButton->setEnabled(true);
     ui->actionArchive_Task_By_Status->setEnabled(true);
+    ui->actionShow_Task->setEnabled(true);
 }
 
 void MainWindow::showStatusMessage(QString message)
@@ -413,4 +416,10 @@ void MainWindow::on_actionArchive_Task_By_Status_triggered()
     connect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
     dialog.exec();
     disconnect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
+}
+
+void MainWindow::on_actionShow_Task_triggered()
+{
+    ShowDialog dialog(this);
+    dialog.exec();
 }

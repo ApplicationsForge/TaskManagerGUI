@@ -34,7 +34,8 @@ SOURCES += \
     gui/settingsdialog.cpp \
     models/taskmanager.cpp \
     gui/widgets/mylistwidgetitem.cpp \
-    gui/archivebystatusdialog.cpp
+    gui/archivebystatusdialog.cpp \
+    gui/showdialog.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -46,14 +47,16 @@ HEADERS += \
     gui/settingsdialog.h \
     models/taskmanager.h \
     gui/widgets/mylistwidgetitem.h \
-    gui/archivebystatusdialog.h
+    gui/archivebystatusdialog.h \
+    gui/showdialog.h
 
 FORMS += \
         gui/mainwindow.ui \
     gui/adddialog.ui \
     gui/deletetaskdialog.ui \
     gui/settingsdialog.ui \
-    gui/archivebystatusdialog.ui
+    gui/archivebystatusdialog.ui \
+    gui/showdialog.ui
 
 RESOURCES += \
     gui/resources/resources.qrc

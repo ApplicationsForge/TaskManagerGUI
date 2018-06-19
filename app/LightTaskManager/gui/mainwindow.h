@@ -15,6 +15,7 @@
 #include "deletetaskdialog.h"
 #include "settingsdialog.h"
 #include "archivebystatusdialog.h"
+#include "showdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -70,6 +71,8 @@ private slots:
     void on_commandLineLineEdit_returnPressed();
 
     void on_actionArchive_Task_By_Status_triggered();
+
+    void on_actionShow_Task_triggered();
 
 private:
     Ui::MainWindow *ui;
