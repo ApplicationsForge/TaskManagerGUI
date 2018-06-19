@@ -6,44 +6,60 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>439</width>
-    <height>373</height>
+    <width>582</width>
+    <height>510</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Описание задачи</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="indexLabel">
+     <property name="text">
+      <string>Индекс</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QPushButton" name="addTagPushButton">
+     <property name="text">
+      <string>+</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="userLabel">
+     <property name="text">
+      <string>Пользователи</string>
+     </property>
+    </widget>
+   </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="tagLabel">
      <property name="text">
       <string>Тэги</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="titleLabel">
      <property name="text">
       <string>Заголовок</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Индекс</string>
-     </property>
-    </widget>
+   <item row="1" column="1" colspan="2">
+    <widget class="QLineEdit" name="titleLineEdit"/>
    </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_5">
-     <property name="text">
-      <string>Пользователи</string>
-     </property>
-    </widget>
+   <item row="5" column="1" rowspan="2">
+    <widget class="QTextEdit" name="userTextEdit"/>
    </item>
-   <item row="6" column="0" colspan="3">
-    <widget class="QDialogButtonBox" name="buttonBox">
+   <item row="7" column="0" colspan="3">
+    <widget class="QTextEdit" name="showTextEdit"/>
+   </item>
+   <item row="8" column="0" colspan="3">
+    <widget class="QDialogButtonBox" name="showButtonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -52,37 +68,49 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="3">
-    <widget class="QTextEdit" name="textEdit_3"/>
+   <item row="2" column="1" rowspan="2">
+    <widget class="QTextEdit" name="tagTextEdit"/>
    </item>
-   <item row="1" column="2">
-    <widget class="QLineEdit" name="lineEdit_2"/>
-   </item>
-   <item row="0" column="2">
-    <widget class="QLineEdit" name="lineEdit"/>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_4">
+   <item row="4" column="0">
+    <widget class="QLabel" name="calendarLabel">
      <property name="text">
       <string>Дедлайн</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QTextEdit" name="textEdit"/>
+   <item row="5" column="2">
+    <widget class="QPushButton" name="addUserPushButton">
+     <property name="text">
+      <string>+</string>
+     </property>
+    </widget>
    </item>
-   <item row="4" column="2">
-    <widget class="QTextEdit" name="textEdit_2"/>
+   <item row="0" column="1" colspan="2">
+    <widget class="QLineEdit" name="indexLineEdit"/>
    </item>
    <item row="3" column="2">
-    <widget class="QLineEdit" name="lineEdit_3"/>
+    <widget class="QPushButton" name="deleteTagPushButton">
+     <property name="text">
+      <string>-</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QPushButton" name="deleteUserPushButton">
+     <property name="text">
+      <string>-</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="QCalendarWidget" name="calendarWidget"/>
    </item>
   </layout>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>showButtonBox</sender>
    <signal>accepted()</signal>
    <receiver>ShowDialog</receiver>
    <slot>accept()</slot>
@@ -98,7 +126,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>showButtonBox</sender>
    <signal>rejected()</signal>
    <receiver>ShowDialog</receiver>
    <slot>reject()</slot>
