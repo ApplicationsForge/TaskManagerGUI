@@ -266,6 +266,7 @@
     <addaction name="actionOpenRepository"/>
     <addaction name="actionAddTask"/>
     <addaction name="actionDeleteTask"/>
+    <addaction name="actionArchive_Task_By_Status"/>
    </widget>
    <widget class="QMenu" name="menuEnvironment">
     <property name="title">
@@ -540,9 +541,9 @@
     <string>Settings</string>
    </property>
   </action>
-  <action name="actionOpenTerminal">
+  <action name="actionArchive_Task_By_Status">
    <property name="text">
-    <string>Open Terminal</string>
+    <string>Archive Task By Status</string>
    </property>
   </action>
  </widget>
