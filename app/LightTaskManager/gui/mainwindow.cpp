@@ -244,7 +244,7 @@ void MainWindow::showTask(QModelIndex index)
         }
         else
         {
-            qDebug() << "can not convert QListWidgetItem to MyListWidgetItem";
+            qDebug() << "Can not convert QListWidgetItem to MyListWidgetItem";
         }
     }
     else
@@ -352,11 +352,6 @@ void MainWindow::on_saveTaskPushButton_clicked()
     ui->addUserToolButton->setEnabled(false);
     ui->removeTagToolButton->setEnabled(false);
     ui->removeUserToolButton->setEnabled(false);
-}
-
-void MainWindow::on_actionOpenTerminal_triggered()
-{
-    m_taskManager->openTerminal(ui->filePathLineEdit->text());
 }
 
 void MainWindow::on_actionSettings_triggered()

@@ -54,8 +54,6 @@ public slots:
     void editTask(QString index, QString task);
     void archiveByStatus(QString status);
 
-    void openTerminal(QString path);
-
     /// get task information
     QString getTaskIndex(QString taskContent);
     QString getTitle(QString taskContent);

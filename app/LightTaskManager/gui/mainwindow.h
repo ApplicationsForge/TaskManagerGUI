@@ -54,8 +54,6 @@ private slots:
 
     void on_saveTaskPushButton_clicked();
 
-    void on_actionOpenTerminal_triggered();
-
     void on_actionSettings_triggered();
 
     void on_acceptFiltersPushButton_clicked();
