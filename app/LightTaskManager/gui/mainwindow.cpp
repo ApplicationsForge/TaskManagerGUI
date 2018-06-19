@@ -422,10 +422,7 @@ void MainWindow::on_archiveByStatusPushButton_clicked()
 void MainWindow::on_actionArchive_Task_By_Status_triggered()
 {
     ArchiveByStatusDialog dialog(this);
-    //connect()
+    connect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
     dialog.exec();
-    /*AddDialog add(*(m_taskManager.data()), this);
-    connect(&add, SIGNAL(addTask(QString)), m_taskManager.data(), SLOT(addTask(QString)));
-    add.exec();
-    disconnect(&add, SIGNAL(addTask(QString)), m_taskManager.data(), SLOT(addTask(QString)));*/
+    disconnect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
 }

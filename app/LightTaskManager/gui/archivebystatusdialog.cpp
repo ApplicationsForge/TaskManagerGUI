@@ -12,3 +12,8 @@ ArchiveByStatusDialog::~ArchiveByStatusDialog()
 {
     delete ui;
 }
+
+void ArchiveByStatusDialog::on_archiveByStatusButtonBox_accepted()
+{
+    emit archiveByStatus(ui->archiveByStatusLineEdit->text());
+}
