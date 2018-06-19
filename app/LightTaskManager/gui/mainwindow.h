@@ -69,8 +69,6 @@ private slots:
 
     void on_commandLineLineEdit_returnPressed();
 
-    void on_archiveByStatusPushButton_clicked();
-
     void on_actionArchive_Task_By_Status_triggered();
 
 private:
