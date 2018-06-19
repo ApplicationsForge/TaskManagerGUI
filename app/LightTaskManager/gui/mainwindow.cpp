@@ -189,7 +189,10 @@ void MainWindow::on_actionOpenRepository_triggered()
 void MainWindow::on_actionInitializeRepository_triggered()
 {
     QString path = QFileDialog::getExistingDirectory(0,"Open Directory", "");
-    m_taskManager->initializeRepository(path);
+    if(!path.isNull())
+    {
+        m_taskManager->initializeRepository(path);
+    }
 }
 
 void MainWindow::changeTaskStatusAction(QString data)
