@@ -177,8 +177,13 @@ void MainWindow::updateTaskWidgets()
 
 void MainWindow::on_actionOpenRepository_triggered()
 {
-    QString path = QFileDialog::getExistingDirectory(0,"Open Directory", "");
-    m_taskManager->openRepository(path);
+    QString file = QFileDialog::getOpenFileName(0, "Open File", "", "*.json");
+    if(!file.isNull())
+    {
+        QString path = QFileInfo(file).path();
+        qDebug() << "Open Dir " << path;
+        m_taskManager->openRepository(path);
+    }
 }
 
 void MainWindow::on_actionInitializeRepository_triggered()
