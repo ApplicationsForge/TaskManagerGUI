@@ -112,7 +112,7 @@ void MainWindow::updateTaskLists()
 
 void MainWindow::updateDirectoryWidgets(QString filePath)
 {
-    ui->filePathLineEdit->setText(filePath);
+    ui->filePathLineEdit->setText(filePath + "/tasks.json");
 }
 
 void MainWindow::setTasks(QStringList taskList)
