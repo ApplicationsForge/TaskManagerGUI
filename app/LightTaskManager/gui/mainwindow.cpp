@@ -223,7 +223,7 @@ void MainWindow::showTask(QModelIndex index)
     MyListWidget* list = qobject_cast<MyListWidget*>(sender());
     if(list)
     {
-        MyListWidgetItem* item = qobject_cast<MyListWidgetItem*>(list->currentItem()->listWidget()->indexWidget(index));
+        MyListWidgetItem* item = qobject_cast<MyListWidgetItem*>(list->indexWidget(index));
         if(item)
         {
             ui->currentTaskIndexLineEdit->setText(item->index());

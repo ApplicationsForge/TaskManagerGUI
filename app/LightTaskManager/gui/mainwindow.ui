@@ -334,29 +334,19 @@
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QGridLayout" name="gridLayout_5">
-        <item row="0" column="0">
-         <widget class="QLabel" name="currentTaskIndexLabel">
-          <property name="text">
-           <string>Индекс</string>
+        <item row="0" column="1" colspan="2">
+         <widget class="QLineEdit" name="currentTaskIndexLineEdit">
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="currentTaskTitleLabel">
-          <property name="text">
-           <string>Заголовок</string>
+        <item row="4" column="1" colspan="2">
+         <widget class="QLineEdit" name="currentTaskDateLineEdit">
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="currentTaskTagsLabel">
-          <property name="text">
-           <string>Тэги</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" rowspan="2">
-         <widget class="QListWidget" name="currentTaskTagsListWidget"/>
         </item>
         <item row="2" column="2">
          <widget class="QToolButton" name="addTagToolButton">
@@ -371,6 +361,13 @@
           <property name="icon">
            <iconset resource="resources/resources.qrc">
             <normaloff>:/images/images/Plus.png</normaloff>:/images/images/Plus.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="2">
+         <widget class="QLineEdit" name="currentTaskTitleLineEdit">
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -390,24 +387,14 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="currentTaskDateLabel">
+        <item row="2" column="0">
+         <widget class="QLabel" name="currentTaskTagsLabel">
           <property name="text">
-           <string>Дедлайн</string>
+           <string>Тэги</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="currentTaskUsersLabel">
-          <property name="text">
-           <string>Пользователи</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1" rowspan="2">
-         <widget class="QListWidget" name="currentTaskUsersListWidget"/>
-        </item>
-        <item row="5" column="2">
+        <item row="6" column="2">
          <widget class="QToolButton" name="addUserToolButton">
           <property name="font">
            <font>
@@ -423,7 +410,17 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="2">
+        <item row="2" column="1" rowspan="2">
+         <widget class="QListWidget" name="currentTaskTagsListWidget"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="currentTaskTitleLabel">
+          <property name="text">
+           <string>Заголовок</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="2">
          <widget class="QToolButton" name="removeUserToolButton">
           <property name="font">
            <font>
@@ -439,26 +436,32 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="1" colspan="2">
-         <widget class="QLineEdit" name="currentTaskDateLineEdit">
-          <property name="readOnly">
-           <bool>true</bool>
+        <item row="6" column="0">
+         <widget class="QLabel" name="currentTaskUsersLabel">
+          <property name="text">
+           <string>Пользователи</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1" colspan="2">
-         <widget class="QLineEdit" name="currentTaskTitleLineEdit">
-          <property name="readOnly">
-           <bool>true</bool>
+        <item row="6" column="1" rowspan="2">
+         <widget class="QListWidget" name="currentTaskUsersListWidget"/>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="currentTaskDateLabel">
+          <property name="text">
+           <string>Дедлайн</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1" colspan="2">
-         <widget class="QLineEdit" name="currentTaskIndexLineEdit">
-          <property name="readOnly">
-           <bool>true</bool>
+        <item row="0" column="0">
+         <widget class="QLabel" name="currentTaskIndexLabel">
+          <property name="text">
+           <string>Индекс</string>
           </property>
          </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QCalendarWidget" name="calendarWidget"/>
         </item>
        </layout>
       </widget>
