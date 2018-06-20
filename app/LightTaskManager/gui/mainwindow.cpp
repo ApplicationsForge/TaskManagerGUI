@@ -420,6 +420,6 @@ void MainWindow::on_actionArchive_Task_By_Status_triggered()
 
 void MainWindow::on_actionShow_Task_triggered()
 {
-    ShowDialog dialog(this);
+    ShowDialog dialog(*(m_taskManager.data()), this);
     dialog.exec();
 }
