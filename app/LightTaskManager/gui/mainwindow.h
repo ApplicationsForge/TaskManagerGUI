@@ -72,7 +72,7 @@ private slots:
 
     void on_actionArchive_Task_By_Status_triggered();
 
-    void on_actionShow_Task_triggered();
+    void on_actionShow_Task_triggered(QModelIndex index);
 
     void saveAfterShow(QString index, QString title, QDate date, QStringList tags, QStringList users, QString subject);
 

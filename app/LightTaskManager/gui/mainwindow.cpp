@@ -94,6 +94,7 @@ void MainWindow::updateTaskLists()
         taskList->setDragDropMode(QAbstractItemView::DragDrop);
         connect(taskList, SIGNAL(dropAction(QString)), this, SLOT(changeTaskStatusAction(QString)));
         connect(taskList, SIGNAL(clicked(QModelIndex)), this, SLOT(showTask(QModelIndex)));
+        connect(taskList, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_actionShow_Task_triggered(QModelIndex)));
         m_tasksLists.push_back(taskList);
     }
 
@@ -418,15 +419,49 @@ void MainWindow::on_actionArchive_Task_By_Status_triggered()
     disconnect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
 }
 
-void MainWindow::on_actionShow_Task_triggered()
+void MainWindow::on_actionShow_Task_triggered(QModelIndex index)
 {
-    ShowDialog dialog(*(m_taskManager.data()), this);
-    connect(&dialog, SIGNAL(saveTask(QString,QString,QDate,QStringList,QStringList,QString)), this, SLOT(saveAfterShow(QString,QString,QDate,QStringList,QStringList,QString)));
-    dialog.exec();
-    disconnect(&dialog, SIGNAL(saveTask(QString,QString,QDate,QStringList,QStringList,QString)), this, SLOT(saveAfterShow(QString,QString,QDate,QStringList,QStringList,QString)));
+    QMap<QString, QString> map;
+    MyListWidget* list = qobject_cast<MyListWidget*>(sender());
+    if(list)
+    {
+        MyListWidgetItem* item = qobject_cast<MyListWidgetItem*>(list->indexWidget(index));
+        if(item)
+        {
+            /*QMap<QString, QString> const map ("index"=item->index(),
+                                       "title"=item->title(),
+                                       "tags":item->tags(),
+                                       "users":item->users(),
+                                       "date":item->date(),
+                                       "description":item->description());*/
+            map["index"] = item->index();
+            map["title"] = item->title();
+            map["tags"] = item->tags();
+            map["users"] = item->users();
+            map["date"] = item->date();
+            map["description"] = item->description();
+            //qDebug() << map.value("index");
+            ShowDialog dialog(*(m_taskManager.data()), map, this);
+            connect(&dialog, SIGNAL(saveTask(QString,QString,QDate,QStringList,QStringList,QString)), this, SLOT(saveAfterShow(QString,QString,QDate,QStringList,QStringList,QString)));
+            dialog.exec();
+            disconnect(&dialog, SIGNAL(saveTask(QString,QString,QDate,QStringList,QStringList,QString)), this, SLOT(saveAfterShow(QString,QString,QDate,QStringList,QStringList,QString)));
+
+        }
+        else
+        {
+            qDebug() << "Can not convert QListWidgetItem to MyListWidgetItem";
+        }
+    }
+    else
+    {
+        qDebug() << "Not success";
+    }
+
+
+
 }
 
 void MainWindow::saveAfterShow(QString index, QString title, QDate date, QStringList tags, QStringList users, QString subject)
 {
-    qDebug() << "Пришел индекс " << index << title << date << tags << users << subject;
+    qDebug() << "Get index " << index << title << date << tags << users << subject;
 }

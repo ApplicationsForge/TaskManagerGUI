@@ -14,7 +14,7 @@ class ShowDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ShowDialog(TaskManager& taskManager, QWidget *parent = 0);
+    explicit ShowDialog(TaskManager& taskManager, QMap<QString, QString> map, QWidget *parent = 0);
     ~ShowDialog();
 
 signals:
@@ -26,12 +26,13 @@ private slots:
 private:
     Ui::ShowDialog *ui;
     TaskManager& m_taskManager;
+    QMap<QString, QString> m_map;
 
     QString m_index;
     QString m_title;
     QDate m_date;
-    QStringList m_tags;
-    QStringList m_users;
+    QString m_tags;
+    QString m_users;
     QString m_subject;
 
     void setup();
