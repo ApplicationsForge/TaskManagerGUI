@@ -4,8 +4,6 @@
 #include <QDialog>
 
 #include "models/taskmanager.h"
-#include "gui/widgets/mylistwidget.h"
-#include "gui/widgets/mylistwidgetitem.h"
 
 namespace Ui {
 class ShowDialog;
@@ -19,6 +17,12 @@ public:
     explicit ShowDialog(TaskManager& taskManager, QWidget *parent = 0);
     ~ShowDialog();
 
+signals:
+    void saveTask(QString index, QString title, QDate date, QStringList tags, QStringList users, QString subject);
+
+private slots:
+    void on_showButtonBox_accepted();
+
 private:
     Ui::ShowDialog *ui;
     TaskManager& m_taskManager;
@@ -28,6 +32,7 @@ private:
     QDate m_date;
     QStringList m_tags;
     QStringList m_users;
+    QString m_subject;
 
     void setup();
 };

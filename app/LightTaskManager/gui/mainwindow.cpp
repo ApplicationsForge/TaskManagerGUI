@@ -421,5 +421,12 @@ void MainWindow::on_actionArchive_Task_By_Status_triggered()
 void MainWindow::on_actionShow_Task_triggered()
 {
     ShowDialog dialog(*(m_taskManager.data()), this);
+    connect(&dialog, SIGNAL(saveTask(QString,QString,QDate,QStringList,QStringList,QString)), this, SLOT(saveAfterShow(QString,QString,QDate,QStringList,QStringList,QString)));
     dialog.exec();
+    disconnect(&dialog, SIGNAL(saveTask(QString,QString,QDate,QStringList,QStringList,QString)), this, SLOT(saveAfterShow(QString,QString,QDate,QStringList,QStringList,QString)));
+}
+
+void MainWindow::saveAfterShow(QString index, QString title, QDate date, QStringList tags, QStringList users, QString subject)
+{
+    qDebug() << "Пришел индекс " << index << title << date << tags << users << subject;
 }

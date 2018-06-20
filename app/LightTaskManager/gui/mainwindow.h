@@ -74,6 +74,8 @@ private slots:
 
     void on_actionShow_Task_triggered();
 
+    void saveAfterShow(QString index, QString title, QDate date, QStringList tags, QStringList users, QString subject);
+
 private:
     Ui::MainWindow *ui;
     QScopedPointer<TaskManager> m_taskManager;
