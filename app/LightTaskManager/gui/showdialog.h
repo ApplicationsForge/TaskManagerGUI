@@ -18,7 +18,7 @@ public:
     ~ShowDialog();
 
 signals:
-    void saveTask(QString index, QString title, QDate date, QStringList tags, QStringList users, QString subject);
+    void saveTask(QString index, QString title, QDate date, QStringList tags, QStringList users, QString description);
 
 private slots:
     void on_showButtonBox_accepted();
@@ -33,7 +33,7 @@ private:
     QDate m_date;
     QString m_tags;
     QString m_users;
-    QString m_subject;
+    QString m_description;
 
     void setup();
 };

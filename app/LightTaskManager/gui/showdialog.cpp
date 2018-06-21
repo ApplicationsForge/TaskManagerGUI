@@ -34,8 +34,8 @@ void ShowDialog::setup()
     m_users = m_map.value("users");
     ui->userTextEdit->setPlainText(m_users);
 
-    m_subject = m_map.value("description");
-    ui->showTextEdit->setText(m_subject);
+    m_description = m_map.value("description");
+    ui->descriptionTextEdit->setText(m_description);
 }
 
 void ShowDialog::on_showButtonBox_accepted()
@@ -45,7 +45,7 @@ void ShowDialog::on_showButtonBox_accepted()
     QDate date = ui->calendarWidget->selectedDate();
     QStringList tags = ui->tagTextEdit->toPlainText().split(" ", QString::SkipEmptyParts);
     QStringList users = ui->userTextEdit->toPlainText().split(" ", QString::SkipEmptyParts);
-    QString subject = ui->showTextEdit->toPlainText();
+    QString description = ui->descriptionTextEdit->toPlainText();
 
-    emit saveTask(index, title, date, tags, users, subject);
+    emit saveTask(index, title, date, tags, users, description);
 }
