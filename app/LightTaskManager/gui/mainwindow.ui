@@ -296,7 +296,7 @@
     <set>Qt::AllDockWidgetAreas</set>
    </property>
    <property name="windowTitle">
-    <string>Детали</string>
+    <string>Задача</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>

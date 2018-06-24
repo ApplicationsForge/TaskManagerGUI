@@ -92,7 +92,6 @@ void MainWindow::updateTaskLists()
         taskList->setDragDropMode(QAbstractItemView::DragDrop);
         connect(taskList, SIGNAL(dropAction(QString)), this, SLOT(changeTaskStatusAction(QString)));
         connect(taskList, SIGNAL(clicked(QModelIndex)), this, SLOT(showTask(QModelIndex)));
-        connect(taskList, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_actionShow_Task_triggered(QModelIndex)));
         m_tasksLists.push_back(taskList);
     }
 
