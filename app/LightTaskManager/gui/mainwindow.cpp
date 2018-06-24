@@ -22,15 +22,17 @@ MainWindow::~MainWindow()
 void MainWindow::setupWidgets()
 {
     auto toolbar = ui->mainToolBar;
-    removeToolBar(toolbar);
-    addToolBar(Qt::LeftToolBarArea, toolbar);
-    toolbar->show();
+    //removeToolBar(toolbar);
+    //addToolBar(Qt::LeftToolBarArea, toolbar);
+    //toolbar->show();
 
     toolbar->addAction(ui->actionInitializeRepository);
     toolbar->addAction(ui->actionOpenRepository);
     toolbar->addAction(ui->actionAddTask);
     toolbar->addAction(ui->actionDeleteTask);
     toolbar->addAction(ui->actionSettings);
+    //toolbar->addAction(ui->actionArchive_Task_By_Status);
+    //toolbar->addAction(ui->actionShow_Task);
 
     ui->statusBar->setStyleSheet("background-color:#333; color: #55bb55");
     ui->statusBar->showMessage("Ready");
@@ -40,10 +42,10 @@ void MainWindow::setupWidgets()
     ui->editTaskPushButton->setEnabled(false);
     ui->saveTaskPushButton->setEnabled(false);
     ui->acceptFiltersPushButton->setEnabled(false);
-    ui->addTagToolButton->setEnabled(false);
-    ui->addUserToolButton->setEnabled(false);
-    ui->removeTagToolButton->setEnabled(false);
-    ui->removeUserToolButton->setEnabled(false);
+    ui->currentTaskTagsLineEdit->setReadOnly(true);
+    ui->currentTaskUsersLineEdit->setReadOnly(true);
+    ui->currentTaskDateCalendarWidget->setEnabled(false);
+    ui->actionArchive_Task_By_Status->setEnabled(false);
 
     updateTaskLists();
 }
@@ -90,6 +92,7 @@ void MainWindow::updateTaskLists()
         taskList->setDragDropMode(QAbstractItemView::DragDrop);
         connect(taskList, SIGNAL(dropAction(QString)), this, SLOT(changeTaskStatusAction(QString)));
         connect(taskList, SIGNAL(clicked(QModelIndex)), this, SLOT(showTask(QModelIndex)));
+        connect(taskList, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_actionShow_Task_triggered(QModelIndex)));
         m_tasksLists.push_back(taskList);
     }
 
@@ -108,7 +111,7 @@ void MainWindow::updateTaskLists()
 
 void MainWindow::updateDirectoryWidgets(QString filePath)
 {
-    ui->filePathLineEdit->setText(filePath);
+    ui->filePathLineEdit->setText(filePath + "/tasks.json");
 }
 
 void MainWindow::setTasks(QStringList taskList)
@@ -126,9 +129,9 @@ void MainWindow::updateTaskWidgets()
 
     ui->currentTaskIndexLineEdit->clear();
     ui->currentTaskTitleLineEdit->clear();
-    ui->currentTaskTagsListWidget->clear();
-    ui->currentTaskDateLineEdit->clear();
-    ui->currentTaskUsersListWidget->clear();
+    ui->currentTaskTagsLineEdit->clear();
+    ui->currentTaskUsersLineEdit->clear();
+    ui->currentTaskDateCalendarWidget->setSelectedDate(QDate::currentDate());
     ui->currentTaskDescriptionPlainTextEdit->clear();
 
     QList< QStringList > tasksContainers;
@@ -176,14 +179,22 @@ void MainWindow::updateTaskWidgets()
 
 void MainWindow::on_actionOpenRepository_triggered()
 {
-    QString path = QFileDialog::getExistingDirectory(0,"Open Directory", "");
-    m_taskManager->openRepository(path);
+    QString file = QFileDialog::getOpenFileName(0, "Open File", "", "*.json");
+    if(!file.isNull())
+    {
+        QString path = QFileInfo(file).path();
+        qDebug() << "Open Dir " << path;
+        m_taskManager->openRepository(path);
+    }
 }
 
 void MainWindow::on_actionInitializeRepository_triggered()
 {
     QString path = QFileDialog::getExistingDirectory(0,"Open Directory", "");
-    m_taskManager->initializeRepository(path);
+    if(!path.isNull())
+    {
+        m_taskManager->initializeRepository(path);
+    }
 }
 
 void MainWindow::changeTaskStatusAction(QString data)
@@ -214,28 +225,32 @@ void MainWindow::showTask(QModelIndex index)
 {
     ui->currentTaskIndexLineEdit->clear();
     ui->currentTaskTitleLineEdit->clear();
-    ui->currentTaskTagsListWidget->clear();
-    ui->currentTaskDateLineEdit->clear();
-    ui->currentTaskUsersListWidget->clear();
+    ui->currentTaskTagsLineEdit->clear();
+    ui->currentTaskUsersLineEdit->clear();
+    ui->currentTaskDateCalendarWidget->setSelectedDate(QDate::currentDate());
     ui->currentTaskDescriptionPlainTextEdit->clear();
 
     MyListWidget* list = qobject_cast<MyListWidget*>(sender());
     if(list)
     {
-        MyListWidgetItem* item = qobject_cast<MyListWidgetItem*>(list->currentItem()->listWidget()->indexWidget(index));
+        MyListWidgetItem* item = qobject_cast<MyListWidgetItem*>(list->indexWidget(index));
         if(item)
         {
             ui->currentTaskIndexLineEdit->setText(item->index());
             ui->currentTaskTitleLineEdit->setText(item->title());
-            ui->currentTaskTagsListWidget->addItems(item->tags().split(" ", QString::SkipEmptyParts));
-            ui->currentTaskDateLineEdit->setText(item->date());
-            ui->currentTaskUsersListWidget->addItems(item->users().split(" ", QString::SkipEmptyParts));
+            ui->currentTaskTagsLineEdit->setText(item->tags());
+
+
+
+            QDate date = QDate::fromString(item->date());
+            ui->currentTaskDateCalendarWidget->setSelectedDate(date);
+            ui->currentTaskUsersLineEdit->setText(item->users());
             ui->currentTaskDescriptionPlainTextEdit->setPlainText(item->description());
             ui->editTaskPushButton->setEnabled(true);
         }
         else
         {
-            qDebug() << "can not convert QListWidgetItem to MyListWidgetItem";
+            qDebug() << "Can not convert QListWidgetItem to MyListWidgetItem";
         }
     }
     else
@@ -257,6 +272,7 @@ void MainWindow::enableTasksActions()
     ui->actionAddTask->setEnabled(true);
     ui->actionDeleteTask->setEnabled(true);
     ui->acceptFiltersPushButton->setEnabled(true);
+    ui->actionArchive_Task_By_Status->setEnabled(true);
 }
 
 void MainWindow::showStatusMessage(QString message)
@@ -276,77 +292,35 @@ void MainWindow::on_editTaskPushButton_clicked()
 {
     ui->currentTaskTitleLineEdit->setReadOnly(false);
     ui->currentTaskDescriptionPlainTextEdit->setReadOnly(false);
-    ui->currentTaskDateLineEdit->setReadOnly(false);
+    ui->currentTaskDateCalendarWidget->setEnabled(true);
+    ui->currentTaskTagsLineEdit->setReadOnly(false);
+    ui->currentTaskUsersLineEdit->setReadOnly(false);
     ui->saveTaskPushButton->setEnabled(true);
-    ui->addTagToolButton->setEnabled(true);
-    ui->addUserToolButton->setEnabled(true);
-    ui->removeTagToolButton->setEnabled(true);
-    ui->removeUserToolButton->setEnabled(true);
-
-    for(size_t i = 0; i < (size_t) ui->currentTaskTagsListWidget->count(); i++)
-    {
-        QListWidgetItem* tagsListItem = ui->currentTaskTagsListWidget->item(i);
-        tagsListItem->setFlags(tagsListItem->flags() | Qt::ItemIsEditable);
-    }
-
-    for(size_t i = 0; i < (size_t) ui->currentTaskUsersListWidget->count(); i++)
-    {
-        QListWidgetItem* usersListItem = ui->currentTaskUsersListWidget->item(i);
-        usersListItem->setFlags(usersListItem->flags() | Qt::ItemIsEditable);
-    }
 }
 
 void MainWindow::on_saveTaskPushButton_clicked()
 {
     QString taskIndex = ui->currentTaskIndexLineEdit->text();
 
-    QString taskTags = "";
+    QString taskTags = ui->currentTaskTagsLineEdit->text();
 
-    for(size_t i = 0; i < (size_t) ui->currentTaskTagsListWidget->count(); i++)
-    {
-        taskTags += QStringLiteral("+") + ui->currentTaskTagsListWidget->item(i)->text() + QStringLiteral(" ");
-    }
+    QString taskUsers = ui->currentTaskUsersLineEdit->text();
 
-    /*QStringList tags = ui->tagLineEdit->text().split(" ", QString::SkipEmptyParts);
-    for(auto tag : tags)
-    {
-        taskTags += QStringLiteral("+") + tag + QStringLiteral(" ");
-    }*/
-
-    QString taskUsers = "";
-    for(size_t i = 0; i < (size_t) ui->currentTaskUsersListWidget->count(); i++)
-    {
-        taskUsers += QStringLiteral("@") + ui->currentTaskUsersListWidget->item(i)->text() + QStringLiteral(" ");
-    }
-
-    /*QStringList users = ui->usersListWidget->;
-    for(auto user : users)
-    {
-        taskUsers += QStringLiteral("@") + user + QStringLiteral(" ");
-    }*/
-
-    QString taskDate = QStringLiteral("until [") + ui->currentTaskDateLineEdit->text() + QStringLiteral("]");
+    QString taskDate = QStringLiteral("until [") + ui->currentTaskDateCalendarWidget->selectedDate().toString() + QStringLiteral("]");
 
     QString taskTitle = QStringLiteral("#") + ui->currentTaskTitleLineEdit->text() + QStringLiteral("#");
     QString taskDescription = ui->currentTaskDescriptionPlainTextEdit->toPlainText();
 
-    QString task = taskTitle + " " + taskDescription + " " + taskTags + taskUsers + taskDate;
+    QString task = taskTitle + QStringLiteral(" ") + taskDescription + QStringLiteral(" ") + taskTags + QStringLiteral(" ") + taskUsers + QStringLiteral(" ") + taskDate;
 
     m_taskManager->editTask(taskIndex, task);
 
     ui->currentTaskTitleLineEdit->setReadOnly(true);
     ui->currentTaskDescriptionPlainTextEdit->setReadOnly(true);
-    ui->currentTaskDateLineEdit->setReadOnly(true);
+    ui->currentTaskDateCalendarWidget->setEnabled(false);
+    ui->currentTaskTagsLineEdit->setReadOnly(true);
+    ui->currentTaskUsersLineEdit->setReadOnly(true);
     ui->saveTaskPushButton->setEnabled(false);
-    ui->addTagToolButton->setEnabled(false);
-    ui->addUserToolButton->setEnabled(false);
-    ui->removeTagToolButton->setEnabled(false);
-    ui->removeUserToolButton->setEnabled(false);
-}
-
-void MainWindow::on_actionOpenTerminal_triggered()
-{
-    m_taskManager->openTerminal(ui->filePathLineEdit->text());
 }
 
 void MainWindow::on_actionSettings_triggered()
@@ -365,32 +339,6 @@ void MainWindow::on_acceptFiltersPushButton_clicked()
     m_taskManager->reopenRepository();
 }
 
-void MainWindow::on_addTagToolButton_clicked()
-{
-    QListWidgetItem* emptyItem = new QListWidgetItem("");
-    ui->currentTaskTagsListWidget->addItem(emptyItem);
-    emptyItem->setFlags(emptyItem->flags() | Qt::ItemIsEditable);
-    ui->currentTaskTagsListWidget->setCurrentItem(emptyItem);
-}
-
-void MainWindow::on_addUserToolButton_clicked()
-{
-    QListWidgetItem* emptyItem = new QListWidgetItem("");
-    ui->currentTaskUsersListWidget->addItem(emptyItem);
-    emptyItem->setFlags(emptyItem->flags() | Qt::ItemIsEditable);
-    ui->currentTaskUsersListWidget->setCurrentItem(emptyItem);
-}
-
-void MainWindow::on_removeTagToolButton_clicked()
-{
-    qDeleteAll(ui->currentTaskTagsListWidget->selectedItems());
-}
-
-void MainWindow::on_removeUserToolButton_clicked()
-{
-    qDeleteAll(ui->currentTaskUsersListWidget->selectedItems());
-}
-
 void MainWindow::on_commandLineLineEdit_returnPressed()
 {
     QString text = ui->commandLineLineEdit->text();
@@ -399,4 +347,12 @@ void MainWindow::on_commandLineLineEdit_returnPressed()
         ui->commandLineLineEdit->clear();
         m_taskManager->runCommand(text);
     }
+}
+
+void MainWindow::on_actionArchive_Task_By_Status_triggered()
+{
+    ArchiveByStatusDialog dialog(this);
+    connect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
+    dialog.exec();
+    disconnect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
 }

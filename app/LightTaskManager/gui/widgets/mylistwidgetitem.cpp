@@ -93,7 +93,7 @@ QString MyListWidgetItem::tags() const
     QString tags;
     for(auto tag : m_tags)
     {
-        tags += tag + " ";
+        tags += QStringLiteral("+") + tag + QStringLiteral("");
     }
     return tags;
 }
@@ -103,7 +103,7 @@ QString MyListWidgetItem::users() const
     QString users;
     for(auto user : m_users)
     {
-        users += user + " ";
+        users += QStringLiteral("@") + user + QStringLiteral("");
     }
     return users;
 }

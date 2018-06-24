@@ -24,6 +24,7 @@ protected:
     const QString m_deleteTask = "delete";
     const QString m_editTask = "edit";
     const QString m_changeTaskStatus = "cs";
+    const QString m_archiveByStatus = "as";
 
     QString m_directory;
     QByteArray m_data;
@@ -43,6 +44,7 @@ public slots:
     void changeTaskStatus(size_t index, QString status);
     void deleteTask(size_t index);
     void editTask(size_t index, QString text);
+    void archiveByStatus(QString text);
 
     void onMessage();
     void setBinPath(QString todolistPath);

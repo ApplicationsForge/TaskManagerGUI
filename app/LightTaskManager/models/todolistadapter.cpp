@@ -73,6 +73,13 @@ void TodolistAdapter::editTask(size_t index, QString text)
     m_todolistProcess->start(args);
 }
 
+void TodolistAdapter::archiveByStatus(QString text)
+{
+    QString args = m_todolistBinPath + " " + m_archiveByStatus + " " + text;
+    qDebug() << "tasks archived by status" << args;
+    m_todolistProcess->start(args);
+}
+
 void TodolistAdapter::onMessage()
 {
     QByteArray message = m_todolistProcess->readAllStandardOutput();

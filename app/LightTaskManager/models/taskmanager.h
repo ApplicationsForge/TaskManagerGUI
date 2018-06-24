@@ -52,8 +52,7 @@ public slots:
     void addTask(QString task);
     void deleteTask(QString index);
     void editTask(QString index, QString task);
-
-    void openTerminal(QString path);
+    void archiveByStatus(QString status);
 
     /// get task information
     QString getTaskIndex(QString taskContent);
