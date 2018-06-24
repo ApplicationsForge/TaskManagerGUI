@@ -15,7 +15,6 @@
 #include "deletetaskdialog.h"
 #include "settingsdialog.h"
 #include "archivebystatusdialog.h"
-#include "showdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -60,21 +59,9 @@ private slots:
 
     void on_acceptFiltersPushButton_clicked();
 
-    void on_addTagToolButton_clicked();
-
-    void on_addUserToolButton_clicked();
-
-    void on_removeTagToolButton_clicked();
-
-    void on_removeUserToolButton_clicked();
-
     void on_commandLineLineEdit_returnPressed();
 
     void on_actionArchive_Task_By_Status_triggered();
-
-    void on_actionShow_Task_triggered(QModelIndex index);
-
-    void saveAfterShow(QString index, QString title, QDate date, QStringList tags, QStringList users, QString subject);
 
 private:
     Ui::MainWindow *ui;
