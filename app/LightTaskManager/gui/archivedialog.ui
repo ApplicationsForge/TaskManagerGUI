@@ -6,42 +6,52 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
-    <height>198</height>
+    <width>627</width>
+    <height>303</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Архивация</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="3">
-    <widget class="QTextEdit" name="archiveTextEdit"/>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QLabel" name="archiveByStatusLabel">
-     <property name="text">
-      <string>Введите статус, по которому будут архивированы задачи</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QLineEdit" name="archiveByStatusLineEdit"/>
-   </item>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="archiveByStatusPushButton">
-     <property name="text">
-      <string>Выполнить</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
+   <item row="6" column="0">
     <widget class="QPushButton" name="gcPushButton">
      <property name="text">
       <string>Удалить все</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1" colspan="2">
+   <item row="1" column="0">
+    <widget class="QLabel" name="archiveByStatusLabel">
+     <property name="text">
+      <string>Введите статус, по которому будут архивированы задачи</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QTextEdit" name="archiveTextEdit"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLineEdit" name="unarchiveLineEdit"/>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="unarchivePushButton">
+     <property name="text">
+      <string>Выполнить</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLineEdit" name="archiveByStatusLineEdit"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="archiveByStatusPushButton">
+     <property name="text">
+      <string>Выполнить</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
     <widget class="QDialogButtonBox" name="archiveButtonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -50,6 +60,26 @@
       <set>QDialogButtonBox::Cancel</set>
      </property>
     </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="unarchiveLabel">
+     <property name="text">
+      <string>Введите индекс задачи для разархивации</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>90</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

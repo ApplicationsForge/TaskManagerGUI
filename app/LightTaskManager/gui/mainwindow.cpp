@@ -31,8 +31,7 @@ void MainWindow::setupWidgets()
     toolbar->addAction(ui->actionAddTask);
     toolbar->addAction(ui->actionDeleteTask);
     toolbar->addAction(ui->actionSettings);
-    //toolbar->addAction(ui->actionArchive_Task_By_Status);
-    //toolbar->addAction(ui->actionShow_Task);
+    toolbar->addAction(ui->actionArchive_Task_By_Status);
 
     ui->statusBar->setStyleSheet("background-color:#333; color: #55bb55");
     ui->statusBar->showMessage("Ready");
