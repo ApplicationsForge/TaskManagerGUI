@@ -14,7 +14,7 @@
 #include "adddialog.h"
 #include "deletetaskdialog.h"
 #include "settingsdialog.h"
-#include "archivebystatusdialog.h"
+#include "archivedialog.h"
 
 namespace Ui {
 class MainWindow;

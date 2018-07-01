@@ -1,22 +1,28 @@
-#ifndef ARCHIVEDIALOG_H
-#define ARCHIVEDIALOG_H
+#ifndef ARCHIVEBYSTATUSDIALOG_H
+#define ARCHIVEBYSTATUSDIALOG_H
 
 #include <QDialog>
 
 namespace Ui {
-class ArchiveDialog;
+class ArchiveByStatusDialog;
 }
 
-class ArchiveDialog : public QDialog
+class ArchiveByStatusDialog : public QDialog
 {
     Q_OBJECT
 
+signals:
+    void archiveByStatus(QString status);
+
 public:
-    explicit ArchiveDialog(QWidget *parent = 0);
-    ~ArchiveDialog();
+    explicit ArchiveByStatusDialog(QWidget *parent = 0);
+    ~ArchiveByStatusDialog();
+
+private slots:
+    void on_archiveByStatusButtonBox_accepted();
 
 private:
-    Ui::ArchiveDialog *ui;
+    Ui::ArchiveByStatusDialog *ui;
 };
 
-#endif // ARCHIVEDIALOG_H
+#endif // ARCHIVEBYSTATUSDIALOG_H

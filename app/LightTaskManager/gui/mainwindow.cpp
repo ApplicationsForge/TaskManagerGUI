@@ -367,7 +367,7 @@ void MainWindow::on_commandLineLineEdit_returnPressed()
 
 void MainWindow::on_actionArchive_Task_By_Status_triggered()
 {
-    ArchiveByStatusDialog dialog(this);
+    ArchiveDialog dialog(this);
     connect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
     dialog.exec();
     disconnect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));

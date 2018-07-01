@@ -1,14 +1,19 @@
-#include "archivedialog.h"
-#include "ui_archivedialog.h"
+#include "archivebystatusdialog.h"
+#include "ui_archivebystatusdialog.h"
 
-ArchiveDialog::ArchiveDialog(QWidget *parent) :
+ArchiveByStatusDialog::ArchiveByStatusDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ArchiveDialog)
+    ui(new Ui::ArchiveByStatusDialog)
 {
     ui->setupUi(this);
 }
 
-ArchiveDialog::~ArchiveDialog()
+ArchiveByStatusDialog::~ArchiveByStatusDialog()
 {
     delete ui;
+}
+
+void ArchiveByStatusDialog::on_archiveByStatusButtonBox_accepted()
+{
+    emit archiveByStatus(ui->archiveByStatusLineEdit->text());
 }
