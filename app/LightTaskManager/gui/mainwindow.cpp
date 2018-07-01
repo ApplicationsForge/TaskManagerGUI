@@ -174,6 +174,23 @@ void MainWindow::updateTaskWidgets()
             m_tasksLists[i]->setItemWidget(item, taskBoard);
         }
     }
+
+    int size = m_tasksLists[0]->sizeHintForColumn(0);
+    for(auto list : m_tasksLists)
+    {
+        size = qMax(size, list->sizeHintForColumn(0));
+    }
+    size += 10;
+
+    for(auto list : m_tasksLists)
+    {
+        list->setMinimumWidth(size);
+    }
+
+    for(auto label : m_statusesLabels)
+    {
+        label->setMinimumWidth(size);
+    }
 }
 
 void MainWindow::on_actionOpenRepository_triggered()
