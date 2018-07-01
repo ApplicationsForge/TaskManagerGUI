@@ -141,6 +141,12 @@ void TaskManager::archiveByStatus(QString status)
     m_todolistAdapter->archiveByStatus(status);
 }
 
+void TaskManager::garbageCollection()
+{
+    emit statusMessage("garbage collection");
+    m_todolistAdapter->garbageCollection();
+}
+
 QString TaskManager::getTaskIndex(QString taskContent)
 {
     return taskContent.section(" ", 1, 1);

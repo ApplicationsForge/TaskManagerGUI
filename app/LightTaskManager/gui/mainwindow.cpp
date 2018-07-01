@@ -369,6 +369,8 @@ void MainWindow::on_actionArchive_Task_By_Status_triggered()
 {
     ArchiveDialog dialog(this);
     connect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
+    connect(&dialog, SIGNAL(garbageCollection()), m_taskManager.data(), SLOT(garbageCollection()));
     dialog.exec();
     disconnect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
+    disconnect(&dialog, SIGNAL(garbageCollection()), m_taskManager.data(), SLOT(garbageCollection()));
 }

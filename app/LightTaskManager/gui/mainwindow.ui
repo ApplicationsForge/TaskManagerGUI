@@ -521,7 +521,7 @@
   </action>
   <action name="actionArchive_Task_By_Status">
    <property name="text">
-    <string>Archive Task By Status</string>
+    <string>Archive</string>
    </property>
   </action>
  </widget>

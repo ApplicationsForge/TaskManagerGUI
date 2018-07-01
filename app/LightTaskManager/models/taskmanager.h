@@ -53,6 +53,7 @@ public slots:
     void deleteTask(QString index);
     void editTask(QString index, QString task);
     void archiveByStatus(QString status);
+    void garbageCollection();
 
     /// get task information
     QString getTaskIndex(QString taskContent);

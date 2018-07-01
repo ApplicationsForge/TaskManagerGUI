@@ -80,6 +80,13 @@ void TodolistAdapter::archiveByStatus(QString text)
     m_todolistProcess->start(args);
 }
 
+void TodolistAdapter::garbageCollection()
+{
+    QString args = m_todolistBinPath + " " + m_garbageCollection;
+    qDebug() << "deleted all archived tasks" << args;
+    m_todolistProcess->start(args);
+}
+
 void TodolistAdapter::onMessage()
 {
     QByteArray message = m_todolistProcess->readAllStandardOutput();
