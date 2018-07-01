@@ -52,6 +52,7 @@ public slots:
     void addTask(QString task);
     void deleteTask(QString index);
     void editTask(QString index, QString task);
+    void lArchived();
     void archiveByStatus(QString status);
     void unarchive(QString index);
     void garbageCollection();

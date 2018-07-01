@@ -135,6 +135,13 @@ void TaskManager::editTask(QString index, QString task)
     m_todolistAdapter->editTask(index.toUInt(), task);
 }
 
+void TaskManager::lArchived()
+{
+    emit statusMessage("l archived");
+    m_todolistAdapter->lArchived();
+    connect(m_todolistAdapter.data(), SIGNAL(lArchive(QByteArray)), this, SLOT(parseTodolistOutput(QByteArray)));
+}
+
 void TaskManager::archiveByStatus(QString status)
 {
     emit statusMessage("archive_by_status" + status);

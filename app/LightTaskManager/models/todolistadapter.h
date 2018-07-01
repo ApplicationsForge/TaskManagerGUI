@@ -24,6 +24,7 @@ protected:
     const QString m_deleteTask = "delete";
     const QString m_editTask = "edit";
     const QString m_changeTaskStatus = "cs";
+    const QString m_lArchived = "l archived";
     const QString m_archiveByStatus = "as";
     const QString m_unarchive = "uar";
     const QString m_garbageCollection = "gc";
@@ -36,6 +37,7 @@ protected:
 
 signals:
     void tasksUpdated(QByteArray tasks);
+    void lArchive(QByteArray tasks);
     void directoryUpdated(QString path);
     void newMessage(QByteArray message);
 
@@ -46,6 +48,7 @@ public slots:
     void changeTaskStatus(size_t index, QString status);
     void deleteTask(size_t index);
     void editTask(size_t index, QString text);
+    void lArchived();
     void archiveByStatus(QString text);
     void unarchive(size_t index);
     void garbageCollection();
