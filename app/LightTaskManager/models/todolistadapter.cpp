@@ -80,6 +80,13 @@ void TodolistAdapter::archiveByStatus(QString text)
     m_todolistProcess->start(args);
 }
 
+void TodolistAdapter::unarchive(size_t index)
+{
+    QString args = m_todolistBinPath + " " + m_unarchive + " " + QString::number(index);
+    qDebug() << "unarchive" << args;
+    m_todolistProcess->start(args);
+}
+
 void TodolistAdapter::garbageCollection()
 {
     QString args = m_todolistBinPath + " " + m_garbageCollection;

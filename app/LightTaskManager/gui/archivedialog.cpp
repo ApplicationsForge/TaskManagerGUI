@@ -24,3 +24,9 @@ void ArchiveDialog::on_gcPushButton_clicked()
     emit garbageCollection();
     this->close();
 }
+
+void ArchiveDialog::on_unarchivePushButton_clicked()
+{
+    emit unarchive(ui->unarchiveLineEdit->text());
+    this->close();
+}

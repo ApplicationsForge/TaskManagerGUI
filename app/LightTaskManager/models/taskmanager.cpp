@@ -141,6 +141,12 @@ void TaskManager::archiveByStatus(QString status)
     m_todolistAdapter->archiveByStatus(status);
 }
 
+void TaskManager::unarchive(QString index)
+{
+    emit statusMessage("unarchive " + index);
+    m_todolistAdapter->unarchive(index.toUInt());
+}
+
 void TaskManager::garbageCollection()
 {
     emit statusMessage("garbage collection");

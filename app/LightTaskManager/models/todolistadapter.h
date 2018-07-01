@@ -25,6 +25,7 @@ protected:
     const QString m_editTask = "edit";
     const QString m_changeTaskStatus = "cs";
     const QString m_archiveByStatus = "as";
+    const QString m_unarchive = "uar";
     const QString m_garbageCollection = "gc";
 
     QString m_directory;
@@ -46,6 +47,7 @@ public slots:
     void deleteTask(size_t index);
     void editTask(size_t index, QString text);
     void archiveByStatus(QString text);
+    void unarchive(size_t index);
     void garbageCollection();
 
     void onMessage();

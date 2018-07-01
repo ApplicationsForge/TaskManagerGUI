@@ -14,6 +14,7 @@ class ArchiveDialog : public QDialog
 signals:
     void archiveByStatus(QString status);
     void garbageCollection();
+    void unarchive(QString index);
 
 public:
     explicit ArchiveDialog(QWidget *parent = 0);
@@ -23,6 +24,8 @@ private slots:
     void on_archiveByStatusPushButton_clicked();
 
     void on_gcPushButton_clicked();
+
+    void on_unarchivePushButton_clicked();
 
 private:
     Ui::ArchiveDialog *ui;
