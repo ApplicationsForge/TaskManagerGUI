@@ -1,12 +1,13 @@
 #include "settingsmanager.h"
 
-SettingsManager::SettingsManager() : SettingsManager(qApp->applicationDirPath() + DEFAULT_SETTINGS_FILE)
+SettingsManager::SettingsManager() : SettingsManager(qApp->applicationDirPath() + "/" + DEFAULT_SETTINGS_FILE)
 {
 
 }
 
 SettingsManager::SettingsManager(QString settingsPath)
 {
+    QMessageBox(QMessageBox::Information, "", settingsPath).exec();
     if (!QFileInfo::exists(settingsPath))
     {
         qDebug() << QStringLiteral("Файл с настройками не найден. Используем настройки по умолчанию");
