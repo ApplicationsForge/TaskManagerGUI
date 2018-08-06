@@ -99,13 +99,9 @@ void SettingsManager::generateDefaultSettings()
     settings->endGroup();
 
     settings->beginGroup("Users");
-        settings->setValue("Count", 6);
+        settings->setValue("Count", 2);
         settings->setValue("User0", "User0");
         settings->setValue("User1", "User1");
-        settings->setValue("User2", "User2");
-        settings->setValue("User3", "User3");
-        settings->setValue("User4", "User4");
-        settings->setValue("User5", "User5");
     settings->endGroup();
 
     settings->beginGroup("Tags");

@@ -11,7 +11,7 @@ TaskManager::TaskManager(QObject *parent) :
     {
 #ifdef Q_OS_UNIX
         QString taskTerminalPath = QDir::homePath() + QStringLiteral("/TaskTerminal/TaskTerminal");
-        QMessageBox(QMessageBox::Information, "TaskTerminalPath", taskTerminalPath).exec();
+        //QMessageBox(QMessageBox::Information, "TaskTerminalPath", taskTerminalPath).exec();
         qDebug() << "TaskTerminalPath" << taskTerminalPath;
         m_todolistAdapter = QSharedPointer<TodolistAdapter> (new TodolistAdapter(taskTerminalPath, this));
 #endif
