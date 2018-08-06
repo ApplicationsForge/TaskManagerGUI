@@ -2,6 +2,7 @@
 #define TASKMANAGER_H
 
 #include <QObject>
+#include <QDir>
 
 #include "models/todolistadapter.h"
 #include "models/settingsmanager.h"

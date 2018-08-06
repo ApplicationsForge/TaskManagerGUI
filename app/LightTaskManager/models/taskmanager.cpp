@@ -9,9 +9,15 @@ TaskManager::TaskManager(QObject *parent) :
     qDebug() << "new instance of task Manager";
     try
     {
+#ifdef Q_OS_UNIX
+        QString taskTerminalPath = QDir::currentPath() + QStringLiteral("/TaskTerminal");
+        qDebug() << "TaskTerminalPath" << taskTerminalPath;
+        m_todolistAdapter = QSharedPointer<TodolistAdapter> (new TodolistAdapter(taskTerminalPath, this));
+#endif
+#ifdef Q_OS_WIN
         QString todolistPath = m_settingsManager->get("General", "TodoListBinPath").toString();
         m_todolistAdapter = QSharedPointer<TodolistAdapter> (new TodolistAdapter(todolistPath, this));
-
+#endif
         connect(m_todolistAdapter.data(), SIGNAL(directoryUpdated(QString)), this, SLOT(onCurrentDirectoryChanged(QString)));
         connect(m_todolistAdapter.data(), SIGNAL(tasksUpdated(QByteArray)), this, SLOT(parseTodolistOutput(QByteArray)));
     }

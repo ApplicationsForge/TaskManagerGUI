@@ -9,8 +9,7 @@ SettingsManager::SettingsManager(QString settingsPath)
 {
     if (!QFileInfo::exists(settingsPath))
     {
-        QMessageBox(QMessageBox::Warning, "Ошибка",
-                    "Файл с настройками не найден. Используем настройки по умолчанию").exec();
+        qDebug() << QStringLiteral("Файл с настройками не найден. Используем настройки по умолчанию");
 
         settings = std::shared_ptr<QSettings>( new QSettings(DEFAULT_SETTINGS_PATH, QSettings::IniFormat) );
         settings->setIniCodec("UTF-8");
@@ -100,9 +99,13 @@ void SettingsManager::generateDefaultSettings()
     settings->endGroup();
 
     settings->beginGroup("Users");
-        settings->setValue("Count", 2);
-        settings->setValue("User0", "Xtail");
-        settings->setValue("User1", "Valeria");
+        settings->setValue("Count", 6);
+        settings->setValue("User0", "User0");
+        settings->setValue("User1", "User1");
+        settings->setValue("User0", "User2");
+        settings->setValue("User1", "User3");
+        settings->setValue("User0", "User4");
+        settings->setValue("User1", "User5");
     settings->endGroup();
 
     settings->beginGroup("Tags");

@@ -7,6 +7,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QMessageBox>
+#include <QDebug>
 #include <memory>
 
 #define DEFAULT_SETTINGS_DIR ""
