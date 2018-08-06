@@ -10,9 +10,7 @@
 #include <QDebug>
 #include <memory>
 
-#define DEFAULT_SETTINGS_DIR ""
 #define DEFAULT_SETTINGS_FILE "Settings.ini"
-#define DEFAULT_SETTINGS_PATH DEFAULT_SETTINGS_DIR DEFAULT_SETTINGS_FILE
 
 class SettingsManager
 {
