@@ -48,7 +48,7 @@ MyListWidgetItem::MyListWidgetItem(QString index, QString title, QString descrip
             }
             for(auto tag : m_tags)
             {
-                QLabel* label = new QLabel(QStringLiteral("+") + tag, this);
+                QLabel* label = new QLabel(tag, this);
                 label->setAlignment(Qt::AlignLeft);
                 label->setStyleSheet("color: #0000bb; border: 1px solid transparent; text-decoration: none;");
                 firstColumn->layout()->addWidget(label);
@@ -63,7 +63,7 @@ MyListWidgetItem::MyListWidgetItem(QString index, QString title, QString descrip
         secondColumn->layout()->setAlignment(Qt::AlignTop);
             for(auto user : m_users)
             {
-                QLabel* label = new QLabel(QStringLiteral("@") + user, this);
+                QLabel* label = new QLabel(user, this);
                 label->setAlignment(Qt::AlignRight);
                 label->setStyleSheet("color: #cd7f32; border: 1px solid transparent;");
                 secondColumn->layout()->addWidget(label);
@@ -93,7 +93,7 @@ QString MyListWidgetItem::tags() const
     QString tags;
     for(auto tag : m_tags)
     {
-        tags += QStringLiteral("+") + tag + QStringLiteral("");
+        tags += tag + QStringLiteral(" ");
     }
     return tags;
 }
@@ -103,7 +103,7 @@ QString MyListWidgetItem::users() const
     QString users;
     for(auto user : m_users)
     {
-        users += QStringLiteral("@") + user + QStringLiteral("");
+        users += user + QStringLiteral(" ");
     }
     return users;
 }
