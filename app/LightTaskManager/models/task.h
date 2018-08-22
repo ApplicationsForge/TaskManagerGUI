@@ -4,9 +4,23 @@
 #include <QStringList>
 #include <QDate>
 
+/**
+ * @brief Класс Задача
+ * Основной тип данных для использования
+ */
 class Task
 {
 public:
+    /**
+     * @brief Конструктор класса
+     * @param index индекс задачи
+     * @param status статус задачи
+     * @param title заголовк задачи
+     * @param date срок задачи
+     * @param tags тэги задачи
+     * @param users исполнители
+     * @param description описание
+     */
     explicit Task(size_t index, QString status, QString title,
                   QDate date = QDate(),
                   QStringList tags = QStringList(),
