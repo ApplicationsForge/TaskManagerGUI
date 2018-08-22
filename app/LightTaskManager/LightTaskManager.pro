@@ -26,7 +26,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     gui/mainwindow.cpp \
-    models/todolistadapter.cpp \
     models/settingsmanager.cpp \
     gui/widgets/mylistwidget.cpp \
     gui/adddialog.cpp \
@@ -34,11 +33,12 @@ SOURCES += \
     gui/settingsdialog.cpp \
     models/taskmanager.cpp \
     gui/widgets/mylistwidgetitem.cpp \
-    gui/archivedialog.cpp
+    gui/archivedialog.cpp \
+    models/task.cpp \
+    models/taskterminaladapter.cpp
 
 HEADERS += \
         gui/mainwindow.h \
-    models/todolistadapter.h \
     models/settingsmanager.h \
     gui/widgets/mylistwidget.h \
     gui/adddialog.h \
@@ -46,7 +46,9 @@ HEADERS += \
     gui/settingsdialog.h \
     models/taskmanager.h \
     gui/widgets/mylistwidgetitem.h \
-    gui/archivedialog.h
+    gui/archivedialog.h \
+    models/task.h \
+    models/taskterminaladapter.h
 
 FORMS += \
         gui/mainwindow.ui \

@@ -4,8 +4,9 @@
 #include <QObject>
 #include <QDir>
 
-#include "models/todolistadapter.h"
+#include "models/taskterminaladapter.h"
 #include "models/settingsmanager.h"
+#include "models/task.h"
 
 class TaskManager : public QObject
 {
@@ -21,14 +22,16 @@ public:
 
 protected:
     QScopedPointer<SettingsManager> m_settingsManager;
-    QSharedPointer<TaskTerminalAdapter> m_todolistAdapter;
+    QSharedPointer<TaskTerminalAdapter> m_adapter;
+
+    QList<Task> m_tasks;
 
     QString m_tagFilter;
     QString m_userFilter;
 
 signals:
     void directoryUpdated(QString directory);
-    void dataUpdated(QStringList todoList);
+    void taskListUpdated();
     void statusMessage(QString message);
 
 public slots:
@@ -45,7 +48,7 @@ public slots:
     void onCurrentDirectoryChanged(QString directory);
 
     /// handle todolist events
-    void parseTodolistOutput(QByteArray data);
+    void onTaskTerminalAdapter_TasksUpdated(QList<Task> tasks);
 
     /// working with tasks
     void changeTaskStatus(QString data, QString status);
@@ -59,16 +62,10 @@ public slots:
     void garbageCollection();
 
     /// get task information
-    QString getTaskIndex(QString taskContent);
-    QString getTitle(QString taskContent);
-    QString getTags(QString taskContent);
-    QString getDate(QString taskContent);
-    QString getUsers(QString taskContent);
-    QString getDescription(QString taskContent);
+    QList<Task> tasks();
 
-    /// setup todolist
-    void setTodolistDirectory(QString directory);
-    QString getTodolistDirectory();
+    void setWorkingDirectory(QString directory);
+    QString getWorkingDirectory();
 
     /// read information from config file
     QStringList readStatuses();

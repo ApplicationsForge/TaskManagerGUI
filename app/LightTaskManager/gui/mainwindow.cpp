@@ -14,8 +14,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    qDeleteAll(m_statusesLabels.begin(), m_statusesLabels.end());
-    qDeleteAll(m_tasksLists.begin(), m_tasksLists.end());
+    for(auto list : m_taskLists)
+    {
+        delete list.first;
+        delete list.second;
+    }
+
+    //qDeleteAll(m_taskLists.begin(), m_taskLists.end());
     delete ui;
 }
 
@@ -52,25 +57,19 @@ void MainWindow::setupWidgets()
 void MainWindow::setupModel()
 {
     connect(m_taskManager.data(), SIGNAL(directoryUpdated(QString)), this, SLOT(updateDirectoryWidgets(QString)));
-    connect(m_taskManager.data(), SIGNAL(dataUpdated(QStringList)), this, SLOT(setTasks(QStringList)));
-    connect(m_taskManager.data(), SIGNAL(dataUpdated(QStringList)), this, SLOT(enableTasksActions()));
+    connect(m_taskManager.data(), SIGNAL(taskListUpdated()), this, SLOT(onTaskManager_TasksUpdated()));
     connect(m_taskManager.data(), SIGNAL(statusMessage(QString)), this, SLOT(showStatusMessage(QString)));
 }
 
 void MainWindow::updateTaskLists()
 {
-    for(auto label : m_statusesLabels)
+    for(auto list : m_taskLists)
     {
-        label->deleteLater();
+        list.first->deleteLater();
+        list.second->deleteLater();
     }
 
-    for(auto list : m_tasksLists)
-    {
-        list->deleteLater();
-    }
-
-    m_statusesLabels.clear();
-    m_tasksLists.clear();
+    m_taskLists.clear();
 
     QStringList statuses = m_taskManager->readStatuses();
 
@@ -81,7 +80,6 @@ void MainWindow::updateTaskLists()
         statusLabel->setText(status);
         statusLabel->setAlignment(Qt::AlignCenter);
         statusLabel->setObjectName(objectName);
-        m_statusesLabels.push_back(statusLabel);
 
         MyListWidget* taskList = new MyListWidget(ui->tasksContainerWidget);
         objectName = status + QStringLiteral("ListWidget");
@@ -91,17 +89,14 @@ void MainWindow::updateTaskLists()
         taskList->setDragDropMode(QAbstractItemView::DragDrop);
         connect(taskList, SIGNAL(dropAction(QString)), this, SLOT(changeTaskStatusAction(QString)));
         connect(taskList, SIGNAL(clicked(QModelIndex)), this, SLOT(showTask(QModelIndex)));
-        m_tasksLists.push_back(taskList);
+
+        m_taskLists.push_back(QPair<QLabel*, MyListWidget*>(statusLabel, taskList));
     }
 
-    for(auto label : m_statusesLabels)
+    for(auto list : m_taskLists)
     {
-        ui->statusesLabelsHorizontalLayout->addWidget(label);
-    }
-
-    for(auto list : m_tasksLists)
-    {
-        ui->tasksContainerHorizontalLayout->addWidget(list);
+        ui->statusesLabelsHorizontalLayout->addWidget(list.first);
+        ui->tasksContainerHorizontalLayout->addWidget(list.second);
     }
 
     updateTaskWidgets();
@@ -112,17 +107,17 @@ void MainWindow::updateDirectoryWidgets(QString filePath)
     ui->filePathLineEdit->setText(filePath + "/tasks.json");
 }
 
-void MainWindow::setTasks(QStringList taskList)
+void MainWindow::onTaskManager_TasksUpdated()
 {
-    m_tasks = taskList;
     updateTaskWidgets();
+    enableTasksActions();
 }
 
 void MainWindow::updateTaskWidgets()
 {
-    for(auto list : m_tasksLists)
+    for(auto list : m_taskLists)
     {
-        list->clear();
+        list.second->clear();
     }
 
     ui->currentTaskIndexLineEdit->clear();
@@ -132,69 +127,72 @@ void MainWindow::updateTaskWidgets()
     ui->currentTaskDateCalendarWidget->setSelectedDate(QDate::currentDate());
     ui->currentTaskDescriptionPlainTextEdit->clear();
 
-    QList< QStringList > tasksContainers;
-    for(auto status : m_statusesLabels)
+    QList<Task> tasks = m_taskManager->tasks();
+
+    QList< QList<Task> > tasksContainers;
+    for(auto list : m_taskLists)
     {
-        QStringList tmp;
-        QString statusTemplate = QStringLiteral("[") + status->text() + QStringLiteral("]");
-        for(auto item : m_tasks)
+        QList<Task> tmp;
+        for(auto item : tasks)
         {
-            if(item.contains(statusTemplate))
+            if(item.status() == list.first->text())
             {
-                QString data = item.remove(statusTemplate);
-                tmp.push_back(data);
+                tmp.push_back(item);
             }
         }
         tasksContainers.push_back(tmp);
     }
 
-    for(size_t i = 0; i < (size_t) m_statusesLabels.size(); i++)
+    for(int i = 0; i < m_taskLists.size(); i++)
     {
-        for(size_t j = 0; j < (size_t) tasksContainers[i].size(); j++)
+        for(int j = 0; j < tasksContainers[i].size(); j++)
         {
             QListWidgetItem* item = new QListWidgetItem();
             item->setTextAlignment(Qt::TopLeftCorner);
             item->setFont(QFont("Arial", -1, 10, false));
 
-            QString data = tasksContainers[i][j];
-            QString index = m_taskManager->getTaskIndex(data);
-            QString title = m_taskManager->getTitle(data);
-            QString desctiption = m_taskManager->getDescription(data);
-            QString date = m_taskManager->getDate(data);
-            QStringList tags = m_taskManager->getTags(data).split(" ", QString::SkipEmptyParts);
-            QStringList users = m_taskManager->getUsers(data).split(" ", QString::SkipEmptyParts);
+            Task task = tasksContainers[i][j];
 
-            item->setText(index);
+            //QString index = m_taskManager->getTaskIndex(data);
+            //QString title = m_taskManager->getTitle(data);
+            //QString desctiption = m_taskManager->getDescription(data);
+            //QString date = m_taskManager->getDate(data);
+            //QStringList tags = m_taskManager->getTags(data).split(" ", QString::SkipEmptyParts);
+            //QStringList users = m_taskManager->getUsers(data).split(" ", QString::SkipEmptyParts);
 
-            MyListWidgetItem* taskBoard = new MyListWidgetItem(index, title, desctiption, date, tags, users, m_tasksLists[i]);
+            item->setText(QString::number(task.index()));
+
+            MyListWidgetItem* taskBoard = new MyListWidgetItem(QString::number(task.index()),
+                                                               task.title(),
+                                                               task.description(),
+                                                               task.date().toString(),
+                                                               task.tags(),
+                                                               task.users(),
+                                                               m_taskLists[i].second);
             item->setSizeHint(taskBoard->minimumSizeHint());
 
-            m_tasksLists[i]->addItem(item);
-            m_tasksLists[i]->setItemWidget(item, taskBoard);
+            m_taskLists[i].second->addItem(item);
+            m_taskLists[i].second->setItemWidget(item, taskBoard);
         }
     }
 
-    int size = m_tasksLists[0]->sizeHintForColumn(0);
-    for(auto list : m_tasksLists)
+    int size = m_taskLists[0].second->sizeHintForColumn(0);
+    for(auto list : m_taskLists)
     {
-        size = qMax(size, list->sizeHintForColumn(0));
+        size = qMax(size, list.second->sizeHintForColumn(0));
     }
     size += 10;
 
-    for(auto list : m_tasksLists)
+    for(auto list : m_taskLists)
     {
-        list->setMinimumWidth(size);
-    }
-
-    for(auto label : m_statusesLabels)
-    {
-        label->setMinimumWidth(size);
+        list.first->setMinimumWidth(size);
+        list.second->setMinimumWidth(size);
     }
 }
 
 void MainWindow::on_actionOpenRepository_triggered()
 {
-    QString file = QFileDialog::getOpenFileName(0, "Open File", "", "*.json");
+    QString file = QFileDialog::getOpenFileName(nullptr, "Open File", "", "*.json");
     if(!file.isNull())
     {
         QString path = QFileInfo(file).path();
@@ -205,7 +203,7 @@ void MainWindow::on_actionOpenRepository_triggered()
 
 void MainWindow::on_actionInitializeRepository_triggered()
 {
-    QString path = QFileDialog::getExistingDirectory(0,"Open Directory", "");
+    QString path = QFileDialog::getExistingDirectory(nullptr,"Open Directory", "");
     if(!path.isNull())
     {
         m_taskManager->initializeRepository(path);
@@ -222,12 +220,11 @@ void MainWindow::changeTaskStatusAction(QString data)
     MyListWidget* senderWidget = qobject_cast<MyListWidget *>(sender());
     if(senderWidget)
     {
-
-        for(size_t i = 0; i < (size_t) m_statusesLabels.size(); i++)
+        for(auto list : m_taskLists)
         {
-            if(m_tasksLists[i] == senderWidget)
+            if(list.second == senderWidget)
             {
-                status = m_statusesLabels[i]->text();
+                status = list.first->text();
             }
         }
     }
@@ -341,9 +338,9 @@ void MainWindow::on_saveTaskPushButton_clicked()
 void MainWindow::on_actionSettings_triggered()
 {
     SettingsDialog dialog(m_taskManager->getSettingsManager(), this);
-    connect(&dialog, SIGNAL(applytodoDirectory(QString)), m_taskManager.data(), SLOT(setTodolistDirectory(QString)));
+    connect(&dialog, SIGNAL(applytodoDirectory(QString)), m_taskManager.data(), SLOT(setWorkingDirectory(QString)));
     dialog.exec();
-    disconnect(&dialog, SIGNAL(applytodoDirectory(QString)), m_taskManager.data(), SLOT(setTodolistDirectory(QString)));
+    disconnect(&dialog, SIGNAL(applytodoDirectory(QString)), m_taskManager.data(), SLOT(setWorkingDirectory(QString)));
     updateTaskLists();
 }
 

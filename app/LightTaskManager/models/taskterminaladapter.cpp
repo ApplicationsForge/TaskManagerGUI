@@ -1,4 +1,4 @@
-#include "todolistadapter.h"
+#include "taskterminaladapter.h"
 
 TaskTerminalAdapter::TaskTerminalAdapter(QString taskTerminalBinPath, QObject *parent) :
     QObject(parent),
@@ -6,7 +6,6 @@ TaskTerminalAdapter::TaskTerminalAdapter(QString taskTerminalBinPath, QObject *p
     m_taskTerminalProcess(new QProcess(this)),
     m_directory("")
 {
-    //connect(m_todolistProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(onMessage()));
     connect(m_taskTerminalProcess.data(), SIGNAL(finished(int)), this, SLOT(onTaskTerminal_Finished()));
 }
 
@@ -103,40 +102,50 @@ void TaskTerminalAdapter::garbageCollection()
 
 void TaskTerminalAdapter::onTaskTerminal_Finished()
 {
-    QByteArray message = m_taskTerminalProcess->readAllStandardOutput();
-    //qDebug() << "read message" << QString::fromUtf8(message);
-    //emit directoryUpdated(m_directory);
-    //emit tasksUpdated(parseTaskTerminalOutput(message));
-    QStringList test = parseTaskTerminalOutput(message);
-    try
-    {
-        QString testTask = test.first();
-        qDebug() << testTask;
+    QByteArray data = m_taskTerminalProcess->readAllStandardOutput();
 
-        qDebug() << getTaskIndex(testTask);
-        qDebug() << getTaskStatus(testTask);
-        qDebug() << getTaskTitle(testTask);
-        qDebug() << getTaskTags(testTask);
-        qDebug() << getTaskUsers(testTask);
-        qDebug() << getTaskDate(testTask);
-        qDebug() << getTaskDescription(testTask);
-    }
-    catch(std::invalid_argument e)
+    QString message = QString::fromUtf8(data);
+    if(message.contains("all"))
     {
-        qDebug() << e.what();
+        QList<Task> tasks = parseRawTasks(data);
+        emit tasksUpdated(tasks);
+    }
+    else
+    {
+        openRepository(m_directory);
     }
 }
 
-QStringList TaskTerminalAdapter::parseTaskTerminalOutput(QByteArray data)
+QList<Task> TaskTerminalAdapter::parseRawTasks(QByteArray data)
 {
-    QStringList tasks = QStringList();
+    QList<Task> tasks = QList<Task>();
+
     QString str = QString::fromUtf8(data);
-    if(str.contains("all"))
+    str.remove("\t"); //delete tabs
+    str.remove("\n all\n");
+
+    QStringList rawTasks = str.split(QRegExp("\n"), QString::SkipEmptyParts);
+    for (auto task : rawTasks)
     {
-        str.remove("\t"); //delete tabs
-        str.remove("\n all\n");
-        tasks = str.split(QRegExp("\n"), QString::SkipEmptyParts);
+        try
+        {
+            size_t index = TaskTerminalAdapter::getTaskIndex(task);
+            QString status = TaskTerminalAdapter::getTaskStatus(task);
+            QString title = TaskTerminalAdapter::getTaskTitle(task);
+            QDate date = TaskTerminalAdapter::getTaskDate(task);
+            QStringList tags = TaskTerminalAdapter::getTaskTags(task);
+            QStringList users = TaskTerminalAdapter::getTaskUsers(task);
+            QString description = TaskTerminalAdapter::getTaskDescription(task);
+
+            tasks.push_back(Task(index, status, title, date, tags, users, description));
+        }
+        catch (std::invalid_argument e)
+        {
+            qDebug() << e.what();
+            continue;
+        }
     }
+
     return tasks;
 }
 

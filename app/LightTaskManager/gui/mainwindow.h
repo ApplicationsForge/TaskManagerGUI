@@ -25,13 +25,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
     void updateDirectoryWidgets(QString filePath);
 
-    void setTasks(QStringList taskList);
+    void onTaskManager_TasksUpdated();
 
     void updateTaskWidgets();
 
@@ -67,10 +67,10 @@ private:
     Ui::MainWindow *ui;
     QScopedPointer<TaskManager> m_taskManager;
 
-    QList< QLabel* > m_statusesLabels;
-    QList< MyListWidget* > m_tasksLists;
+    QList< QPair<QLabel*, MyListWidget*> > m_taskLists;
 
-    QStringList m_tasks;
+    //QList< QLabel* > m_statusesLabels;
+    //QList< MyListWidget* > m_tasksLists;
 
     void setupWidgets();
     void setupModel();

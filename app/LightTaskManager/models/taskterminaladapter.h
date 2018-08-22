@@ -1,11 +1,13 @@
-#ifndef TODOLISTADAPTER_H
-#define TODOLISTADAPTER_H
+#ifndef TASKTERMINALADAPTER_H
+#define TASKTERMINALADAPTER_H
 
 #include <QObject>
 #include <QProcess>
 #include <QFile>
 #include <QDebug>
 #include <QDate>
+
+#include "models/task.h"
 
 /**
  * @brief Класс для взаимодействия с TaskTerminal
@@ -73,7 +75,7 @@ protected:
     const QString m_unarchive = "uar";
     const QString m_garbageCollection = "gc";
 
-    static QStringList parseTaskTerminalOutput(QByteArray data);
+    QList<Task> parseRawTasks(QByteArray data);
 
     static unsigned int getTaskIndex(QString task);
     static QString getTaskStatus(QString task);
@@ -82,13 +84,12 @@ protected:
     static QStringList getTaskUsers(QString task);
     static QDate getTaskDate(QString task);
     static QString getTaskDescription(QString task);
-
 signals:
     /**
      * @brief Сигнал об обновлении списка задач
      * @param Список задач
      */
-    void tasksUpdated(QStringList tasks);
+    void tasksUpdated(QList<Task> tasks);
 
     void lArchive(QByteArray tasks);
 
@@ -118,7 +119,6 @@ public slots:
      */
     void openRepository(QString directory);
 
-
     void addTask(QString text);
     void changeTaskStatus(size_t index, QString status);
     void deleteTask(size_t index);
@@ -135,4 +135,4 @@ public slots:
     void runCommand(QString command);
 };
 
-#endif // TODOLISTADAPTER_H
+#endif // TASKTERMINALADAPTER_H

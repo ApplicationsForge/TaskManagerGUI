@@ -3,6 +3,7 @@
 TaskManager::TaskManager(QObject *parent) :
     QObject(parent),  
     m_settingsManager(new SettingsManager()),
+    m_tasks(QList<Task>()),
     m_tagFilter(""),
     m_userFilter("")
 {
@@ -10,9 +11,9 @@ TaskManager::TaskManager(QObject *parent) :
     try
     {
         QString todolistPath = m_settingsManager->get("General", "TodoListBinPath").toString();
-        m_todolistAdapter = QSharedPointer<TaskTerminalAdapter> (new TaskTerminalAdapter(todolistPath, this));
-        connect(m_todolistAdapter.data(), SIGNAL(directoryUpdated(QString)), this, SLOT(onCurrentDirectoryChanged(QString)));
-        connect(m_todolistAdapter.data(), SIGNAL(tasksUpdated(QByteArray)), this, SLOT(parseTodolistOutput(QByteArray)));
+        m_adapter = QSharedPointer<TaskTerminalAdapter> (new TaskTerminalAdapter(todolistPath, this));
+        connect(m_adapter.data(), SIGNAL(directoryUpdated(QString)), this, SLOT(onCurrentDirectoryChanged(QString)));
+        connect(m_adapter.data(), SIGNAL(tasksUpdated(QList<Task>)), this, SLOT(onTaskTerminalAdapter_TasksUpdated(QList<Task>)));
     }
     catch(std::invalid_argument e)
     {
@@ -37,22 +38,22 @@ void TaskManager::setUserFilter(const QString &userFilter)
 
 void TaskManager::runCommand(QString command)
 {
-    m_todolistAdapter->runCommand(command);
+    m_adapter->runCommand(command);
 }
 
 void TaskManager::openRepository(QString directory)
 {
-    m_todolistAdapter->openRepository(directory);
+    m_adapter->openRepository(directory);
 }
 
 void TaskManager::initializeRepository(QString directory)
 {
-    m_todolistAdapter->initializeRepository(directory);
+    m_adapter->initializeRepository(directory);
 }
 
 void TaskManager::reopenRepository()
 {
-    openRepository(m_todolistAdapter->currentDirectory());
+    openRepository(m_adapter->currentDirectory());
 }
 
 void TaskManager::onCurrentDirectoryChanged(QString directory)
@@ -60,39 +61,10 @@ void TaskManager::onCurrentDirectoryChanged(QString directory)
     emit directoryUpdated(directory);
 }
 
-void TaskManager::parseTodolistOutput(QByteArray data)
+void TaskManager::onTaskTerminalAdapter_TasksUpdated(QList<Task> tasks)
 {
-    //qDebug() << "filters:" << m_tagFilter << m_userFilter;
-
-    emit statusMessage("parse todolist output with filters " + m_tagFilter + " and " + m_userFilter);
-
-    QString str(data);
-    if(str.contains("all"))
-    {
-        //QStringList todoList = str.split(QRegExp("[\n;\r]"), QString::SkipEmptyParts);
-        str.remove("\t"); //delete tabs
-        str.remove("\n all\n");
-        QStringList todoList = str.split(QRegExp("\n"), QString::SkipEmptyParts);
-        if(!m_tagFilter.isEmpty())
-        {
-            todoList = filterByTagName(todoList);
-            //qDebug() << "----- tasks filtered by tag -----" << m_tagFilter;
-            //qDebug() << todoList;
-        }
-
-        if(!m_userFilter.isEmpty())
-        {
-            todoList = filterByUserName(todoList);
-            //qDebug() << "----- tasks filtered by user -----" << m_userFilter;
-            //qDebug() << todoList;
-        }
-
-        emit dataUpdated(todoList);
-    }
-    else
-    {
-        reopenRepository();
-    }
+    m_tasks = tasks;
+    emit taskListUpdated();
 }
 
 void TaskManager::changeTaskStatus(QString data, QString status)
@@ -113,182 +85,71 @@ void TaskManager::changeTaskStatus(QString data, QString status)
 void TaskManager::changeTaskStatus(size_t index, QString status)
 {
     emit statusMessage("change task " + QString::number(index) + " status to " + status);
-    m_todolistAdapter->changeTaskStatus(index, status);
+    m_adapter->changeTaskStatus(index, status);
 }
 
 void TaskManager::addTask(QString task)
 {
     emit statusMessage("add task " + task);
-    m_todolistAdapter->addTask(task);
+    m_adapter->addTask(task);
 }
 
 void TaskManager::deleteTask(QString index)
 {
     emit statusMessage("delete task " + index);
-    m_todolistAdapter->deleteTask(index.toUInt());
+    m_adapter->deleteTask(index.toUInt());
 }
 
 void TaskManager::editTask(QString index, QString task)
 {
     emit statusMessage("edit task " + index);
-    m_todolistAdapter->editTask(index.toUInt(), task);
+    m_adapter->editTask(index.toUInt(), task);
 }
 
 void TaskManager::lArchived()
 {
     emit statusMessage("l archived");
-    m_todolistAdapter->lArchived();
-    connect(m_todolistAdapter.data(), SIGNAL(lArchive(QByteArray)), this, SLOT(parseTodolistOutput(QByteArray)));
+    m_adapter->lArchived();
+    connect(m_adapter.data(), SIGNAL(lArchive(QByteArray)), this, SLOT(onTaskTerminalAdapter_TasksUpdated(QByteArray)));
 }
 
 void TaskManager::archiveByStatus(QString status)
 {
     emit statusMessage("archive_by_status" + status);
-    m_todolistAdapter->archiveByStatus(status);
+    m_adapter->archiveByStatus(status);
 }
 
 void TaskManager::unarchive(QString index)
 {
     emit statusMessage("unarchive " + index);
-    m_todolistAdapter->unarchive(index.toUInt());
+    m_adapter->unarchive(index.toUInt());
 }
 
 void TaskManager::garbageCollection()
 {
     emit statusMessage("garbage collection");
-    m_todolistAdapter->garbageCollection();
+    m_adapter->garbageCollection();
 }
 
-QString TaskManager::getTaskIndex(QString taskContent)
+QList<Task> TaskManager::tasks()
 {
-    return taskContent.section(" ", 1, 1);
+    return m_tasks;
 }
 
-QString TaskManager::getTitle(QString taskContent)
-{
-    QString title = getTaskIndex(taskContent);
-
-    QString tmp = "";
-    bool finded = false;
-    for(auto symbol : taskContent)
-    {
-        if(symbol == '#')
-        {
-            if(!finded)
-            {
-                finded = true;
-            }
-            else
-            {
-                finded = false;
-            }
-        }
-        else
-        {
-            if(finded)
-            {
-                tmp += symbol;
-            }
-        }
-    }
-
-    if(tmp.size() > 0)
-    {
-        title = tmp;
-    }
-
-    return title;
-}
-
-QString TaskManager::getTags(QString taskContent)
-{
-    QString currentTaskTags = "";
-    QStringList allTags = readTags();
-    for(auto tag : allTags)
-    {
-        QString tagTemplate = QStringLiteral("+") + tag;
-        if(taskContent.contains(tagTemplate))
-        {
-            currentTaskTags += tag + " ";
-        }
-    }
-    return currentTaskTags;
-}
-
-QString TaskManager::getDate(QString taskContent)
-{
-    QString date = "";
-    if(taskContent.contains("until ["))
-    {
-        date = taskContent.split("until [")[1].split("]")[0];
-        //qDebug() << "test reqExp" << date;
-    }
-    return date;
-}
-
-QString TaskManager::getUsers(QString taskContent)
-{
-    QString currentTaskUsers = "";
-    QStringList allUsers = readUsers();
-    for(auto user : allUsers)
-    {
-        QString userTemplate = QStringLiteral("@") + user;
-        if(taskContent.contains(userTemplate))
-        {
-            currentTaskUsers += user + " ";
-        }
-    }
-    return currentTaskUsers;
-}
-
-QString TaskManager::getDescription(QString taskContent)
-{
-    QString description = "";
-
-    QString index = getTaskIndex(taskContent);
-    QString title = getTitle(taskContent);
-    QStringList tags = getTags(taskContent).split(" ", QString::SkipEmptyParts);
-    QStringList users = getUsers(taskContent).split(" ", QString::SkipEmptyParts);
-    QString date = getDate(taskContent);
-
-    taskContent.remove(QStringLiteral("#") + title + QStringLiteral("#"));
-
-    taskContent.remove(0, index.length() + 1);
-    for(auto tag : tags)
-    {
-        taskContent.remove(QStringLiteral("+") + tag);
-    }
-
-    for(auto user : users)
-    {
-        taskContent.remove(QStringLiteral("@") + user);
-    }
-
-    taskContent.remove(QStringLiteral("until [") + date + QStringLiteral("]"));
-
-    QStringList tmp = taskContent.split(QRegExp(" "), QString::SkipEmptyParts);
-    for(auto s : tmp)
-    {
-        description += s + QStringLiteral(" ");
-    }
-
-    return description;
-}
-
-void TaskManager::setTodolistDirectory(QString directory)
+void TaskManager::setWorkingDirectory(QString directory)
 {
     m_settingsManager->set("General", "TodoListBinPath", directory);
     m_settingsManager->saveSettings();
 
     QString todolistPath = m_settingsManager->get("General", "TodoListBinPath").toString();
-    m_todolistAdapter->setBinPath(todolistPath);
+    m_adapter->setBinPath(todolistPath);
 
     emit statusMessage("set Todolist directory " + directory);
 }
 
-QString TaskManager::getTodolistDirectory()
+QString TaskManager::getWorkingDirectory()
 {
-    return m_todolistAdapter->currentTodoListBinPath();
+    return m_adapter->currentTodoListBinPath();
 }
 
 QStringList TaskManager::readStatuses()
@@ -324,7 +185,7 @@ QStringList TaskManager::readTags()
         int tagsCount = m_settingsManager->get("Tags", "Count").toInt();
         if(tagsCount > 0)
         {
-            for(size_t i = 0; i < (size_t) tagsCount; i++)
+            for(int i = 0; i < tagsCount; i++)
             {
                 QString key = QStringLiteral("Tag") + QString::number(i);
                 QString tagName = m_settingsManager->get("Tags", key).toString();
@@ -348,7 +209,7 @@ QStringList TaskManager::readUsers()
         int usersCount = m_settingsManager->get("Users", "Count").toInt();
         if(usersCount > 0)
         {
-            for(size_t i = 0; i < (size_t) usersCount; i++)
+            for(int i = 0; i < usersCount; i++)
             {
                 QString key = QStringLiteral("User") + QString::number(i);
                 QString userName = m_settingsManager->get("Users", key).toString();
