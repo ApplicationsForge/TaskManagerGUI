@@ -10,7 +10,7 @@ TaskManager::TaskManager(QObject *parent) :
     try
     {
         QString todolistPath = m_settingsManager->get("General", "TodoListBinPath").toString();
-        m_todolistAdapter = QSharedPointer<TodolistAdapter> (new TodolistAdapter(todolistPath, this));
+        m_todolistAdapter = QSharedPointer<TaskTerminalAdapter> (new TaskTerminalAdapter(todolistPath, this));
         connect(m_todolistAdapter.data(), SIGNAL(directoryUpdated(QString)), this, SLOT(onCurrentDirectoryChanged(QString)));
         connect(m_todolistAdapter.data(), SIGNAL(tasksUpdated(QByteArray)), this, SLOT(parseTodolistOutput(QByteArray)));
     }
@@ -97,7 +97,7 @@ void TaskManager::parseTodolistOutput(QByteArray data)
 
 void TaskManager::changeTaskStatus(QString data, QString status)
 {
-    QString index = data.split(" ", QString::SkipEmptyParts).operator [](0);
+    QString index = data.split(" ", QString::SkipEmptyParts).first();
     bool isCorrect;
     size_t number = index.toUInt(&isCorrect);
     if(isCorrect)

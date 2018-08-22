@@ -21,7 +21,7 @@ public:
 
 protected:
     QScopedPointer<SettingsManager> m_settingsManager;
-    QSharedPointer<TodolistAdapter> m_todolistAdapter;
+    QSharedPointer<TaskTerminalAdapter> m_todolistAdapter;
 
     QString m_tagFilter;
     QString m_userFilter;
