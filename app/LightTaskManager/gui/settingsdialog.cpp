@@ -46,6 +46,9 @@ void SettingsDialog::on_buttonBox_accepted()
        m_settingsManager.set("Statuses", key, statuses[i]);
     }
 
+    QString defaultPath = ui->defaultPathLineEdit->text();
+    m_settingsManager.set("General", "DefaultTasksPath", defaultPath);
+
     m_settingsManager.saveSettings();
     this->close();
 }
@@ -53,11 +56,13 @@ void SettingsDialog::on_buttonBox_accepted()
 void SettingsDialog::setup()
 {
     ui->todolistBinPathLineEdit->clear();
+    ui->defaultPathLineEdit->clear();
     ui->usersTextEdit->clear();
     ui->tagsTextEdit->clear();
     ui->statusesTextEdit->clear();
 
     QString todoListBinPath = "";
+    QString defaultTasksPath = "";
     QString users;
     QString tags;
     QString statuses;
@@ -65,6 +70,8 @@ void SettingsDialog::setup()
     try
     {
         todoListBinPath = m_settingsManager.get("General", "TodoListBinPath").toString();
+
+        defaultTasksPath = m_settingsManager.get("General", "DefaultTasksPath").toString();
 
         int userCount = m_settingsManager.get("Users", "Count").toInt();
         if(userCount > 0)
@@ -105,6 +112,7 @@ void SettingsDialog::setup()
     }
 
     ui->todolistBinPathLineEdit->setText(todoListBinPath);
+    ui->defaultPathLineEdit->setText(defaultTasksPath);
     ui->usersTextEdit->setText(users);
     ui->tagsTextEdit->setText(tags);
     ui->statusesTextEdit->setText(statuses);
@@ -113,10 +121,21 @@ void SettingsDialog::setup()
 void SettingsDialog::on_todolistBinPathToolButton_clicked()
 {
     //QString str = QFileDialog::getExistingDirectory(0, "", "");
-    QString path = QFileDialog::getOpenFileName(this, "Выберите путь до программы todolist", "");
+    QString path = QFileDialog::getOpenFileName(this, "Выберите путь до программы Taskterminal", "");
     if(path.length() > 0)
     {
         ui->todolistBinPathLineEdit->clear();
         ui->todolistBinPathLineEdit->setText(path);
+    }
+}
+
+void SettingsDialog::on_defaultPathToolButton_clicked()
+{
+    QString path = QFileDialog::getExistingDirectory(this, "", "");
+    //QString path = QFileDialog::getOpenFileName(this, "Выберите путь до файза с задачами по умолчанию", "*.json");
+    if(path.length() > 0)
+    {
+        ui->defaultPathLineEdit->clear();
+        ui->defaultPathLineEdit->setText(path);
     }
 }

@@ -27,6 +27,8 @@ private slots:
 
     void on_todolistBinPathToolButton_clicked();
 
+    void on_defaultPathToolButton_clicked();
+
 private:
     Ui::SettingsDialog *ui;
     SettingsManager m_settingsManager;

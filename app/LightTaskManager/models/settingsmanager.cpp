@@ -88,6 +88,7 @@ void SettingsManager::generateDefaultSettings()
 {
     settings->beginGroup("General");
         settings->setValue("TodoListBinPath", "TaskTerminal");
+        settings->setValue("DefaultTasksPath", "");
     settings->endGroup();
 
     settings->beginGroup("Statuses");

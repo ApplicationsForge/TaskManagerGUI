@@ -1,10 +1,13 @@
 #include "taskterminaladapter.h"
 
-TaskTerminalAdapter::TaskTerminalAdapter(QString taskTerminalBinPath, QObject *parent) :
+TaskTerminalAdapter::TaskTerminalAdapter(QString taskTerminalBinPath,
+        QString defaultTasksPath,
+        QObject *parent) :
     QObject(parent),
     m_taskTerminalBinPath(taskTerminalBinPath),
     m_taskTerminalProcess(new QProcess(this)),
-    m_directory("")
+    m_directory(""),
+    m_defaultPath(defaultTasksPath)
 {
     connect(m_taskTerminalProcess.data(), SIGNAL(finished(int)), this, SLOT(onTaskTerminal_Finished()));
 }
@@ -22,6 +25,19 @@ QString TaskTerminalAdapter::currentDirectory() const
 QString TaskTerminalAdapter::currentTodoListBinPath() const
 {
     return m_taskTerminalBinPath;
+}
+
+QString TaskTerminalAdapter::getDefaultPath() const
+{
+    return m_defaultPath;
+}
+
+void TaskTerminalAdapter::setDefaultPath(const QString &defaultPath)
+{
+    if(QFile::exists(defaultPath))
+    {
+        m_defaultPath = defaultPath;
+    }
 }
 
 void TaskTerminalAdapter::initializeRepository(QString directory)

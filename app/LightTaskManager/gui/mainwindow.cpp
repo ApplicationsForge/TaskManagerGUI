@@ -10,6 +10,12 @@ MainWindow::MainWindow(QWidget *parent) :
     setupWidgets();
     setupModel();
     this->showMaximized();
+
+    auto defaultRepository = m_taskManager->getDefaultTasksPath();
+    if(!defaultRepository.isEmpty())
+    {
+        m_taskManager->openRepository(defaultRepository);
+    }
 }
 
 MainWindow::~MainWindow()

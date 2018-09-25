@@ -67,6 +67,9 @@ public slots:
     void setWorkingDirectory(QString directory);
     QString getWorkingDirectory();
 
+    void setDefaultTasksPath(QString path);
+    QString getDefaultTasksPath();
+
     /// read information from config file
     QStringList readStatuses();
     QStringList readTags();

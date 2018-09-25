@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QDate>
+#include <QFile>
 
 #include "models/task.h"
 
@@ -21,7 +22,7 @@ public:
      * @param путь до исполняемого файла TaskTerminal
      * @param parent родительский объект
      */
-    explicit TaskTerminalAdapter(QString taskTerminalBinPath, QObject *parent = nullptr);
+    explicit TaskTerminalAdapter(QString taskTerminalBinPath, QString defaultTasksPath, QObject *parent = nullptr);
 
     /**
      * @brief Деструктор класса
@@ -40,6 +41,9 @@ public:
      */
     QString currentTodoListBinPath() const;
 
+    QString getDefaultPath() const;
+    void setDefaultPath(const QString &defaultPath);
+
 protected:
     /// Путь до исполняемого файла TaskTerminal
     QString m_taskTerminalBinPath = "";
@@ -50,6 +54,8 @@ protected:
     /// Путь до текущей директории
     QString m_directory;
     QByteArray m_data;
+
+    QString m_defaultPath;
 
     /// Команда для инициализации репозитория
     const QString m_initializeRepositoryCommand = "init";

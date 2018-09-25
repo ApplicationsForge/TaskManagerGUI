@@ -11,7 +11,8 @@ TaskManager::TaskManager(QObject *parent) :
     try
     {
         QString todolistPath = m_settingsManager->get("General", "TodoListBinPath").toString();
-        m_adapter = QSharedPointer<TaskTerminalAdapter> (new TaskTerminalAdapter(todolistPath, this));
+        QString defaultTasksPath = m_settingsManager->get("General", "DefaultTasksPath").toString();
+        m_adapter = QSharedPointer<TaskTerminalAdapter> (new TaskTerminalAdapter(todolistPath, defaultTasksPath, this));
         connect(m_adapter.data(), SIGNAL(directoryUpdated(QString)), this, SLOT(onCurrentDirectoryChanged(QString)));
         connect(m_adapter.data(), SIGNAL(tasksUpdated(QList<Task>)), this, SLOT(onTaskTerminalAdapter_TasksUpdated(QList<Task>)));
     }
@@ -166,6 +167,16 @@ void TaskManager::setWorkingDirectory(QString directory)
 QString TaskManager::getWorkingDirectory()
 {
     return m_adapter->currentTodoListBinPath();
+}
+
+void TaskManager::setDefaultTasksPath(QString path)
+{
+    m_adapter->setDefaultPath(path);
+}
+
+QString TaskManager::getDefaultTasksPath()
+{
+    return m_adapter->getDefaultPath();
 }
 
 QStringList TaskManager::readStatuses()
