@@ -150,6 +150,7 @@ QList<Task> TaskManager::tasks()
             }
         }
     }
+    std::reverse(filteredTasks.begin(), filteredTasks.end());
     return filteredTasks;
 }
 
