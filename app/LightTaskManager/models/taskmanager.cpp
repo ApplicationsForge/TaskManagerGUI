@@ -135,18 +135,14 @@ void TaskManager::garbageCollection()
 
 QList<Task> TaskManager::tasks()
 {
-    qDebug() << m_tagFilter << m_userFilter;
     QList<Task> filteredTasks = QList<Task>();
 
     for(auto task : m_tasks)
     {
-        qDebug() << task.tags().join(" ");
         if((task.tags().join(" ").contains(m_tagFilter)) || m_tagFilter.isEmpty())
         {
-            qDebug() << "passed";
             if((task.users().join(" ").contains(m_userFilter)) || m_userFilter.isEmpty())
             {
-                qDebug() << "passed";
                 filteredTasks.push_back(task);
             }
         }
