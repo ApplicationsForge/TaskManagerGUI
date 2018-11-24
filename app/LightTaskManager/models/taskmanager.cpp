@@ -64,6 +64,7 @@ void TaskManager::onCurrentDirectoryChanged(QString directory)
 
 void TaskManager::onTaskTerminalAdapter_TasksUpdated(QList<Task> tasks)
 {
+    std::reverse(tasks.begin(), tasks.end());
     m_tasks = tasks;
     emit taskListUpdated();
 }
@@ -150,7 +151,6 @@ QList<Task> TaskManager::tasks()
             }
         }
     }
-    std::reverse(filteredTasks.begin(), filteredTasks.end());
     return filteredTasks;
 }
 
