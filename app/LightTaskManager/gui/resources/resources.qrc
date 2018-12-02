@@ -6,4 +6,11 @@
         <file>images/Minus.png</file>
         <file>images/Settings.png</file>
     </qresource>
+    <qresource prefix="/images/aist">
+        <file>images/aist/add_file.png</file>
+        <file>images/aist/gear.png</file>
+        <file>images/aist/open.png</file>
+        <file>images/aist/point_add.png</file>
+        <file>images/aist/point_remove.png</file>
+    </qresource>
 </RCC>

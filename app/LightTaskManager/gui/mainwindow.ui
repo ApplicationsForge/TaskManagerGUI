@@ -502,7 +502,7 @@
   <action name="actionInitializeRepository">
    <property name="icon">
     <iconset resource="resources/resources.qrc">
-     <normaloff>:/images/images/FileNew.png</normaloff>:/images/images/FileNew.png</iconset>
+     <normaloff>:/images/aist/images/aist/add_file.png</normaloff>:/images/aist/images/aist/add_file.png</iconset>
    </property>
    <property name="text">
     <string>Initialize Repository</string>
@@ -511,7 +511,7 @@
   <action name="actionAddTask">
    <property name="icon">
     <iconset resource="resources/resources.qrc">
-     <normaloff>:/images/images/Plus.png</normaloff>:/images/images/Plus.png</iconset>
+     <normaloff>:/images/aist/images/aist/point_add.png</normaloff>:/images/aist/images/aist/point_add.png</iconset>
    </property>
    <property name="text">
     <string>Add Task</string>
@@ -520,7 +520,7 @@
   <action name="actionDeleteTask">
    <property name="icon">
     <iconset resource="resources/resources.qrc">
-     <normaloff>:/images/images/Minus.png</normaloff>:/images/images/Minus.png</iconset>
+     <normaloff>:/images/aist/images/aist/point_remove.png</normaloff>:/images/aist/images/aist/point_remove.png</iconset>
    </property>
    <property name="text">
     <string>Delete Task</string>
@@ -529,7 +529,7 @@
   <action name="actionOpenRepository">
    <property name="icon">
     <iconset resource="resources/resources.qrc">
-     <normaloff>:/images/images/FileOpen.png</normaloff>:/images/images/FileOpen.png</iconset>
+     <normaloff>:/images/aist/images/aist/open.png</normaloff>:/images/aist/images/aist/open.png</iconset>
    </property>
    <property name="text">
     <string>Open Repository</string>
@@ -538,7 +538,7 @@
   <action name="actionSettings">
    <property name="icon">
     <iconset resource="resources/resources.qrc">
-     <normaloff>:/images/images/Settings.png</normaloff>:/images/images/Settings.png</iconset>
+     <normaloff>:/images/aist/images/aist/gear.png</normaloff>:/images/aist/images/aist/gear.png</iconset>
    </property>
    <property name="text">
     <string>Settings</string>

@@ -33,16 +33,13 @@ MainWindow::~MainWindow()
 void MainWindow::setupWidgets()
 {
     auto toolbar = ui->mainToolBar;
-    //removeToolBar(toolbar);
-    //addToolBar(Qt::LeftToolBarArea, toolbar);
-    //toolbar->show();
 
     toolbar->addAction(ui->actionInitializeRepository);
     toolbar->addAction(ui->actionOpenRepository);
     toolbar->addAction(ui->actionAddTask);
     toolbar->addAction(ui->actionDeleteTask);
     toolbar->addAction(ui->actionSettings);
-    toolbar->addAction(ui->actionArchive_Task_By_Status);
+    //toolbar->addAction(ui->actionArchive_Task_By_Status);
 
     ui->statusBar->setStyleSheet("background-color:#333; color: #55bb55");
     ui->statusBar->showMessage("Ready");
