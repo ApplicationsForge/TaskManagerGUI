@@ -1,4 +1,4 @@
-#include "settingsmanager.h"
+#include "settings_manager.h"
 
 SettingsManager::SettingsManager() : SettingsManager(DEFAULT_SETTINGS_PATH)
 {

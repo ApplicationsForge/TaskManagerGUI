@@ -1,4 +1,4 @@
-#include "mylistwidget.h"
+#include "my_list_widget.h"
 
 MyListWidget::MyListWidget(QWidget *parent) :
     QListWidget(parent)

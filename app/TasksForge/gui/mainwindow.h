@@ -8,13 +8,13 @@
 #include <QLayout>
 
 #include "models/taskmanager.h"
-#include "gui/widgets/mylistwidget.h"
-#include "gui/widgets/mylistwidgetitem.h"
+#include "gui/widgets/my_list_widget.h"
+#include "gui/widgets/my_list_widget_item.h"
 
-#include "adddialog.h"
-#include "deletetaskdialog.h"
-#include "settingsdialog.h"
-#include "archivedialog.h"
+#include "add_dialog.h"
+#include "delete_task_dialog.h"
+#include "settings_dialog.h"
+#include "archive_dialog.h"
 
 namespace Ui {
 class MainWindow;

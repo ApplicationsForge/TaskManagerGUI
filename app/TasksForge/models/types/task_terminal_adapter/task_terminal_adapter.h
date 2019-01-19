@@ -8,7 +8,7 @@
 #include <QDate>
 #include <QFile>
 
-#include "models/task.h"
+#include "models/types/task/task.h"
 
 /**
  * @brief Класс для взаимодействия с TaskTerminal

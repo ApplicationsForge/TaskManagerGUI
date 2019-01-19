@@ -1,5 +1,5 @@
-#include "archivedialog.h"
-#include "ui_archivedialog.h"
+#include "archive_dialog.h"
+#include "ui_archive_dialog.h"
 
 ArchiveDialog::ArchiveDialog(QWidget *parent) :
     QDialog(parent),

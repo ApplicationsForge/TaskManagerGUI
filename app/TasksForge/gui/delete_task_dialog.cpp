@@ -1,5 +1,5 @@
-#include "deletetaskdialog.h"
-#include "ui_deletetaskdialog.h"
+#include "delete_task_dialog.h"
+#include "ui_delete_task_dialog.h"
 
 DeleteTaskDialog::DeleteTaskDialog(QWidget *parent) :
     QDialog(parent),

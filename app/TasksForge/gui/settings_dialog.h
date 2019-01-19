@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QFileDialog>
 
-#include "models/settingsmanager.h"
+#include "models/types/settings_manager/settings_manager.h"
 
 namespace Ui {
 class SettingsDialog;

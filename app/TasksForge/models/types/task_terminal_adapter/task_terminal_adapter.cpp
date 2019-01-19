@@ -1,4 +1,4 @@
-#include "taskterminaladapter.h"
+#include "task_terminal_adapter.h"
 
 TaskTerminalAdapter::TaskTerminalAdapter(QString taskTerminalBinPath,
         QString defaultTasksPath,

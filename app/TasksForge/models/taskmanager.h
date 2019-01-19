@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QDir>
 
-#include "models/taskterminaladapter.h"
-#include "models/settingsmanager.h"
-#include "models/task.h"
+#include "models/types/task_terminal_adapter/task_terminal_adapter.h"
+#include "models/types/settings_manager/settings_manager.h"
+#include "models/types/task/task.h"
 
 class TaskManager : public QObject
 {

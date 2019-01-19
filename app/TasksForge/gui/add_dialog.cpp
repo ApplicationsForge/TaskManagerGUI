@@ -1,5 +1,5 @@
-#include "adddialog.h"
-#include "ui_adddialog.h"
+#include "add_dialog.h"
+#include "ui_add_dialog.h"
 
 AddDialog::AddDialog(TaskManager &taskManager, QWidget *parent) :
     QDialog(parent),
