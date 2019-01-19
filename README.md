@@ -1,4 +1,4 @@
-# Task Manager
+# Tasks Forge
 This project is a simple TaskManager which has 2 versions: GUI and console.
 Console version based on this project https://github.com/gammons/todolist
 
