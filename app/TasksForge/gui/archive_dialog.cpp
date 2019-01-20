@@ -6,18 +6,12 @@ ArchiveDialog::ArchiveDialog(QWidget *parent) :
     ui(new Ui::ArchiveDialog)
 {
     ui->setupUi(this);
-    show();
+    ui->gcPushButton->hide();
 }
 
 ArchiveDialog::~ArchiveDialog()
 {
     delete ui;
-}
-
-void ArchiveDialog::show()
-{
-    emit lArchived();
-    ui->archiveTextEdit->setText("4 #New Task @Valeria until [вт июн. 19 2018] Testing");
 }
 
 void ArchiveDialog::on_archiveByStatusPushButton_clicked()

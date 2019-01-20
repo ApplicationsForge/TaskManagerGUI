@@ -15,14 +15,12 @@ signals:
     void archiveByStatus(QString status);
     void garbageCollection();
     void unarchive(QString index);
-    void lArchived();
 
 public:
     explicit ArchiveDialog(QWidget *parent = nullptr);
     ~ArchiveDialog();
 
 private slots:
-    void show();
     void on_archiveByStatusPushButton_clicked();
 
     void on_gcPushButton_clicked();
