@@ -15,7 +15,7 @@ signals:
     void deleteTask(QString index);
 
 public:
-    explicit DeleteTaskDialog(QWidget *parent = 0);
+    explicit DeleteTaskDialog(QWidget *parent = nullptr);
     ~DeleteTaskDialog();
 
 private slots:

@@ -3,18 +3,18 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    m_taskManager(new TaskManager(this))
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setupWidgets();
     setupModel();
     this->showMaximized();
 
-    auto defaultRepository = m_taskManager->getDefaultTasksPath();
+    Router& router = Router::getInstance();
+    auto defaultRepository = router.getRepository()->defaultTaskRepositoryPath();
     if(!defaultRepository.isEmpty())
     {
-        m_taskManager->openRepository(defaultRepository);
+        router.openRepository(defaultRepository);
     }
 }
 
@@ -59,9 +59,10 @@ void MainWindow::setupWidgets()
 
 void MainWindow::setupModel()
 {
-    connect(m_taskManager.data(), SIGNAL(directoryUpdated(QString)), this, SLOT(updateDirectoryWidgets(QString)));
-    connect(m_taskManager.data(), SIGNAL(taskListUpdated()), this, SLOT(onTaskManager_TasksUpdated()));
-    connect(m_taskManager.data(), SIGNAL(statusMessage(QString)), this, SLOT(showStatusMessage(QString)));
+    Router& router = Router::getInstance();
+    QObject::connect(&router, SIGNAL(directoryUpdated(QString)), this, SLOT(updateDirectoryWidgets(QString)));
+    QObject::connect(&router, SIGNAL(taskListUpdated()), this, SLOT(onTaskManager_TasksUpdated()));
+    QObject::connect(&router, SIGNAL(statusMessage(QString)), this, SLOT(showStatusMessage(QString)));
 }
 
 void MainWindow::updateTaskLists()
@@ -74,7 +75,8 @@ void MainWindow::updateTaskLists()
 
     m_taskLists.clear();
 
-    QStringList statuses = m_taskManager->readStatuses();
+    Router& router = Router::getInstance();
+    QStringList statuses = router.getRepository()->readStatuses();
 
     for(auto status : statuses)
     {
@@ -130,7 +132,8 @@ void MainWindow::updateTaskWidgets()
     ui->currentTaskDateCalendarWidget->setSelectedDate(QDate::currentDate());
     ui->currentTaskDescriptionPlainTextEdit->clear();
 
-    QList<Task> tasks = m_taskManager->tasks();
+    Router& router = Router::getInstance();
+    QList<Task> tasks = router.getRepository()->tasks();
 
     QList< QList<Task> > tasksContainers;
     for(auto list : m_taskLists)
@@ -200,7 +203,8 @@ void MainWindow::on_actionOpenRepository_triggered()
     {
         QString path = QFileInfo(file).path();
         qDebug() << "Open Dir " << path;
-        m_taskManager->openRepository(path);
+        Router& router = Router::getInstance();
+        router.openRepository(path);
     }
 }
 
@@ -209,7 +213,8 @@ void MainWindow::on_actionInitializeRepository_triggered()
     QString path = QFileDialog::getExistingDirectory(nullptr,"Open Directory", "");
     if(!path.isNull())
     {
-        m_taskManager->initializeRepository(path);
+        Router& router = Router::getInstance();
+        router.initializeRepository(path);
     }
 }
 
@@ -233,7 +238,8 @@ void MainWindow::changeTaskStatusAction(QString data)
     }
 
     // change task status by index
-    m_taskManager->changeTaskStatus(index.toULongLong(), status);
+    Router& router = Router::getInstance();
+    router.changeTaskStatus(index.toULongLong(), status);
 }
 
 void MainWindow::showTask(QModelIndex index)
@@ -276,10 +282,11 @@ void MainWindow::showTask(QModelIndex index)
 
 void MainWindow::on_actionAddTask_triggered()
 {
-    AddDialog add(*(m_taskManager.data()), this);
-    connect(&add, SIGNAL(addTask(QString)), m_taskManager.data(), SLOT(addTask(QString)));
+    Router& router = Router::getInstance();
+    AddDialog add(this);
+    connect(&add, SIGNAL(addTask(QString)), &router, SLOT(addTask(QString)));
     add.exec();
-    disconnect(&add, SIGNAL(addTask(QString)), m_taskManager.data(), SLOT(addTask(QString)));
+    disconnect(&add, SIGNAL(addTask(QString)), &router, SLOT(addTask(QString)));
 }
 
 void MainWindow::enableTasksActions()
@@ -297,10 +304,11 @@ void MainWindow::showStatusMessage(QString message)
 
 void MainWindow::on_actionDeleteTask_triggered()
 {
+    Router& router = Router::getInstance();
     DeleteTaskDialog dialog(this);
-    connect(&dialog, SIGNAL(deleteTask(QString)), m_taskManager.data(), SLOT(deleteTask(QString)));
+    connect(&dialog, SIGNAL(deleteTask(QString)), &router, SLOT(deleteTask(QString)));
     dialog.exec();
-    disconnect(&dialog, SIGNAL(deleteTask(QString)), m_taskManager.data(), SLOT(deleteTask(QString)));
+    disconnect(&dialog, SIGNAL(deleteTask(QString)), &router, SLOT(deleteTask(QString)));
 }
 
 void MainWindow::on_editTaskPushButton_clicked()
@@ -328,7 +336,8 @@ void MainWindow::on_saveTaskPushButton_clicked()
 
     QString task = taskTitle + QStringLiteral(" ") + taskDescription + QStringLiteral(" ") + taskTags + QStringLiteral(" ") + taskUsers + QStringLiteral(" ") + taskDate;
 
-    m_taskManager->editTask(taskIndex, task);
+    Router& router = Router::getInstance();
+    router.editTask(taskIndex, task);
 
     ui->currentTaskTitleLineEdit->setReadOnly(true);
     ui->currentTaskDescriptionPlainTextEdit->setReadOnly(true);
@@ -340,18 +349,20 @@ void MainWindow::on_saveTaskPushButton_clicked()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    SettingsDialog dialog(m_taskManager->getSettingsManager(), this);
-    connect(&dialog, SIGNAL(applytodoDirectory(QString)), m_taskManager.data(), SLOT(setWorkingDirectory(QString)));
+    Router& router = Router::getInstance();
+    SettingsDialog dialog(this);
+    connect(&dialog, SIGNAL(applytodoDirectory(QString)), &router, SLOT(setTaskTerminalBinPath(QString)));
     dialog.exec();
-    disconnect(&dialog, SIGNAL(applytodoDirectory(QString)), m_taskManager.data(), SLOT(setWorkingDirectory(QString)));
+    disconnect(&dialog, SIGNAL(applytodoDirectory(QString)), &router, SLOT(setTaskTerminalBinPath(QString)));
     updateTaskLists();
 }
 
 void MainWindow::on_acceptFiltersPushButton_clicked()
 {
-    m_taskManager->setTagFilter(ui->filterByTagLineEdit->text());
-    m_taskManager->setUserFilter(ui->filterByUserLineEdit->text());
-    m_taskManager->reopenRepository();
+    Router& router = Router::getInstance();
+    router.getRepository()->setTagFilter(ui->filterByTagLineEdit->text());
+    router.getRepository()->setUserFilter(ui->filterByUserLineEdit->text());
+    router.openRepository();
 }
 
 void MainWindow::on_commandLineLineEdit_returnPressed()
@@ -360,20 +371,20 @@ void MainWindow::on_commandLineLineEdit_returnPressed()
     if(text.length() > 0)
     {
         ui->commandLineLineEdit->clear();
-        m_taskManager->runCommand(text);
+        Router& router = Router::getInstance();
+        router.executeTaskTerminalCommand(text);
     }
 }
 
 void MainWindow::on_actionArchive_Task_By_Status_triggered()
 {
+    Router& router = Router::getInstance();
     ArchiveDialog dialog(this);
-    connect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
-    connect(&dialog, SIGNAL(garbageCollection()), m_taskManager.data(), SLOT(garbageCollection()));
-    connect(&dialog, SIGNAL(unarchive(QString)), m_taskManager.data(), SLOT(unarchive(QString)));
-    connect(&dialog, SIGNAL(lArchived()), m_taskManager.data(), SLOT(lArchived()));
+    connect(&dialog, SIGNAL(archiveByStatus(QString)), &router, SLOT(archiveByStatus(QString)));
+    connect(&dialog, SIGNAL(garbageCollection()), &router, SLOT(garbageCollection()));
+    connect(&dialog, SIGNAL(unarchive(QString)), &router, SLOT(unarchive(QString)));
     dialog.exec();
-    disconnect(&dialog, SIGNAL(archiveByStatus(QString)), m_taskManager.data(), SLOT(archiveByStatus(QString)));
-    disconnect(&dialog, SIGNAL(garbageCollection()), m_taskManager.data(), SLOT(garbageCollection()));
-    disconnect(&dialog, SIGNAL(unarchive(QString)), m_taskManager.data(), SLOT(unarchive(QString)));
-    disconnect(&dialog, SIGNAL(lArchived()), m_taskManager.data(), SLOT(lArchived()));
+    disconnect(&dialog, SIGNAL(archiveByStatus(QString)), &router, SLOT(archiveByStatus(QString)));
+    disconnect(&dialog, SIGNAL(garbageCollection()), &router, SLOT(garbageCollection()));
+    disconnect(&dialog, SIGNAL(unarchive(QString)), &router, SLOT(unarchive(QString)));
 }

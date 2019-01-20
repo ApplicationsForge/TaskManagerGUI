@@ -18,7 +18,7 @@ signals:
     void lArchived();
 
 public:
-    explicit ArchiveDialog(QWidget *parent = 0);
+    explicit ArchiveDialog(QWidget *parent = nullptr);
     ~ArchiveDialog();
 
 private slots:

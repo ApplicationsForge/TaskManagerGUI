@@ -7,7 +7,7 @@
 #include <QListWidgetItem>
 #include <QLayout>
 
-#include "models/taskmanager.h"
+#include "models/router.h"
 #include "gui/widgets/my_list_widget.h"
 #include "gui/widgets/my_list_widget_item.h"
 
@@ -65,12 +65,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QScopedPointer<TaskManager> m_taskManager;
 
     QList< QPair<QLabel*, MyListWidget*> > m_taskLists;
-
-    //QList< QLabel* > m_statusesLabels;
-    //QList< MyListWidget* > m_tasksLists;
 
     void setupWidgets();
     void setupModel();

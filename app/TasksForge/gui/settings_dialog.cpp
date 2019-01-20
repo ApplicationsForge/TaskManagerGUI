@@ -1,10 +1,9 @@
 #include "settings_dialog.h"
 #include "ui_settings_dialog.h"
 
-SettingsDialog::SettingsDialog(SettingsManager settingsManager, QWidget *parent) :
+SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SettingsDialog),
-    m_settingsManager(settingsManager)
+    ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
     setup();
@@ -17,99 +16,61 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::on_buttonBox_accepted()
 {
+    Router& router = Router::getInstance();
     emit applytodoDirectory(ui->todolistBinPathLineEdit->text());
     //QMessageBox(QMessageBox::Information, "Информация", "Перезагрузите приложение, чтобы настройки обновились.").exec();
     QStringList users = ui->usersTextEdit->toPlainText().split("\n", QString::SkipEmptyParts);
     QStringList tags = ui->tagsTextEdit->toPlainText().split("\n", QString::SkipEmptyParts);
     QStringList statuses = ui->statusesTextEdit->toPlainText().split("\n", QString::SkipEmptyParts);
     int usersCount = users.size();
-    m_settingsManager.set("Users", "Count", usersCount);
-    for(size_t i = 0; i < (size_t) usersCount; i++)
+    router.getRepository()->setUsersCount(usersCount);
+    for(int i = 0; i < usersCount; i++)
     {
        QString key = QStringLiteral("User") + QString::number(i);
-       m_settingsManager.set("Users", key, users[i]);
+       router.getRepository()->addUser(key, users[i]);
     }
 
     int tagsCount = tags.size();
-    m_settingsManager.set("Tags", "Count", tagsCount);
-    for(size_t i = 0; i < (size_t) tagsCount; i++)
+    router.getRepository()->setTagsCount(tagsCount);
+    for(int i = 0; i < tagsCount; i++)
     {
        QString key = QStringLiteral("Tag") + QString::number(i);
-       m_settingsManager.set("Tags", key, tags[i]);
+       router.getRepository()->addTag(key, tags[i]);
     }
 
     int statusesCount = statuses.size();
-    m_settingsManager.set("Statuses", "Count", statusesCount);
+    router.getRepository()->setStatusesCount(statusesCount);
     for(size_t i = 0; i < (size_t) statusesCount; i++)
     {
        QString key = QStringLiteral("Status") + QString::number(i);
-       m_settingsManager.set("Statuses", key, statuses[i]);
+       router.getRepository()->addStatus(key, statuses[i]);
     }
 
     QString defaultPath = ui->defaultPathLineEdit->text();
-    m_settingsManager.set("General", "DefaultTasksPath", defaultPath);
-
-    m_settingsManager.saveSettings();
+    router.getRepository()->setDefaultTaskRepositoryPath(defaultPath);
     this->close();
 }
 
 void SettingsDialog::setup()
 {
+    Router& router = Router::getInstance();
+
     ui->todolistBinPathLineEdit->clear();
     ui->defaultPathLineEdit->clear();
     ui->usersTextEdit->clear();
     ui->tagsTextEdit->clear();
     ui->statusesTextEdit->clear();
 
-    QString todoListBinPath = "";
-    QString defaultTasksPath = "";
-    QString users;
-    QString tags;
-    QString statuses;
+    QString todoListBinPath = router.getRepository()->taskTerminalBinPath();
+    QString defaultTasksPath = router.getRepository()->defaultTaskRepositoryPath();
 
-    try
-    {
-        todoListBinPath = m_settingsManager.get("General", "TodoListBinPath").toString();
+    QStringList userList = router.getRepository()->readUsers();
+    QStringList tagList = router.getRepository()->readTags();
+    QStringList statusList = router.getRepository()->readStatuses();
 
-        defaultTasksPath = m_settingsManager.get("General", "DefaultTasksPath").toString();
-
-        int userCount = m_settingsManager.get("Users", "Count").toInt();
-        if(userCount > 0)
-        {
-            for(size_t i = 0; i < (size_t) userCount; i++)
-            {
-                QString key = QStringLiteral("User") + QString::number(i);
-                QString user = m_settingsManager.get("Users", key).toString() + "\n";
-                users.push_back(user);
-            }
-        }
-
-        int tagsCount = m_settingsManager.get("Tags", "Count").toInt();
-        if(tagsCount > 0)
-        {
-            for(size_t i = 0; i < (size_t) tagsCount; i++)
-            {
-                QString key = QStringLiteral("Tag") + QString::number(i);
-                QString tag = m_settingsManager.get("Tags", key).toString() + "\n";
-                tags.push_back(tag);
-            }
-        }
-
-        int statusesCount = m_settingsManager.get("Statuses", "Count").toInt();
-        if(statusesCount > 0)
-        {
-            for(size_t i = 0; i < (size_t) statusesCount; i++)
-            {
-                QString key = QStringLiteral("Status") + QString::number(i);
-                QString status = m_settingsManager.get("Statuses", key).toString() + "\n";
-                statuses.push_back(status);
-            }
-        }
-    }
-    catch(std::invalid_argument e)
-    {
-        QMessageBox(QMessageBox::Warning, "SettingsError", e.what()).exec();
-    }
+    QString users = userList.join("\n");
+    QString tags = tagList.join("\n");
+    QString statuses = statusList.join("\n");
 
     ui->todolistBinPathLineEdit->setText(todoListBinPath);
     ui->defaultPathLineEdit->setText(defaultTasksPath);

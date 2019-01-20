@@ -1,10 +1,9 @@
 #include "add_dialog.h"
 #include "ui_add_dialog.h"
 
-AddDialog::AddDialog(TaskManager &taskManager, QWidget *parent) :
+AddDialog::AddDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddDialog),
-    m_taskManager(taskManager),
     m_date(QDate())
 {
     ui->setupUi(this);
@@ -22,17 +21,21 @@ AddDialog::~AddDialog()
 
 void AddDialog::setup()
 {
+    Router& router = Router::getInstance();
+
     ui->tagComboBox->clear();
-    m_tags = m_taskManager.readTags();
+    m_tags = router.readTags();
     ui->tagComboBox->addItems(m_tags);
 
     ui->userComboBox->clear();
-    m_users = m_taskManager.readUsers();
+    m_users = router.readUsers();
     ui->userComboBox->addItems(m_users);
 }
 
 void AddDialog::on_addButtonBox_accepted()
 {
+    Router& router = Router::getInstance();
+
     if(ui->addTitleLineEdit->text() == nullptr)
     {
         QMessageBox(QMessageBox::Information, "Information", "Введите заголовок задачи").exec();
@@ -44,7 +47,7 @@ void AddDialog::on_addButtonBox_accepted()
 
         QString tags = "";
         QStringList currentTags = ui->activeTagsLineEdit->text().split(" ", QString::SkipEmptyParts);
-        QStringList supportedTags = m_taskManager.readTags();
+        QStringList supportedTags = router.readTags();
         for(auto currentTag : currentTags)
         {
             QString currentTagData = currentTag;
@@ -78,7 +81,7 @@ void AddDialog::on_addButtonBox_accepted()
 
         QString users = "";
         QStringList currentUsers = ui->activeUsersLineEdit->text().split(" ", QString::SkipEmptyParts);
-        QStringList supportedUsers = m_taskManager.readUsers();
+        QStringList supportedUsers = router.readUsers();
         for(auto currentUser : currentUsers)
         {
             QString currentUserData = currentUser;
@@ -139,18 +142,18 @@ void AddDialog::on_addUserPushButton_clicked()
 
 void AddDialog::addNewTag(QString tag)
 {
-    int tagsCount = m_tags.size() + 1;
-    m_taskManager.getSettingsManager().set("Tags", "Count", tagsCount);
+    Router& router = Router::getInstance();
+    unsigned int tagsCount = (unsigned int) m_tags.size() + 1;
+    router.getRepository()->setTagsCount(tagsCount);
     QString newTagName = QStringLiteral("Tag") + QString::number(tagsCount - 1);
-    m_taskManager.getSettingsManager().set("Tags", newTagName, tag);
-    m_taskManager.getSettingsManager().saveSettings();
+    router.getRepository()->addTag(newTagName, tag);
 }
 
 void AddDialog::addNewUser(QString user)
 {
-    int usersCount = m_users.size() + 1;
-    m_taskManager.getSettingsManager().set("Users", "Count", usersCount);
+    Router& router = Router::getInstance();
+    unsigned int usersCount = (unsigned int) m_users.size() + 1;
+    router.getRepository()->setUsersCount(usersCount);
     QString newUserName = QStringLiteral("User") + QString::number(usersCount - 1);
-    m_taskManager.getSettingsManager().set("Users", newUserName, user);
-    m_taskManager.getSettingsManager().saveSettings();
+    router.getRepository()->addUser(newUserName, user);
 }

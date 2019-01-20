@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include <QDebug>
 
-#include "models/taskmanager.h"
+#include "models/router.h"
 
 namespace Ui {
 class AddDialog;
@@ -17,7 +17,7 @@ class AddDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddDialog(TaskManager& taskManager, QWidget *parent = 0);
+    explicit AddDialog(QWidget *parent = nullptr);
     ~AddDialog();
 
 signals:
@@ -37,7 +37,6 @@ private slots:
 
 private:
     Ui::AddDialog *ui;
-    TaskManager& m_taskManager;
 
     QDate m_date;
 

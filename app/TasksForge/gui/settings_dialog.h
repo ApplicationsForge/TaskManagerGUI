@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QFileDialog>
 
-#include "models/types/settings_manager/settings_manager.h"
+#include "models/router.h"
 
 namespace Ui {
 class SettingsDialog;
@@ -19,7 +19,7 @@ signals:
     void applytodoDirectory(QString directory);
 
 public:
-    explicit SettingsDialog(SettingsManager settingsManager = SettingsManager(), QWidget *parent = 0);
+    explicit SettingsDialog(QWidget *parent = nullptr);
     ~SettingsDialog();
 
 private slots:
@@ -31,7 +31,6 @@ private slots:
 
 private:
     Ui::SettingsDialog *ui;
-    SettingsManager m_settingsManager;
 
     void setup();
 };
